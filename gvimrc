@@ -13,6 +13,8 @@ set guicursor+=i:blinkwait3000
 " set guifont=Monoid:h14:cANSI:qDRAFT
 set guifont=Fira_Code:h16:W300:cANSI:qDRAFT 
 
-highlight CursorLine cterm=NONE ctermbg=yellow ctermfg=White guibg=gray10 guifg=White
+" I used the following line with my markai colorscheme - however if I want to
+" back to this I need to transfer it to my colorscheme instead of here
+" highlight CursorLine cterm=NONE ctermbg=yellow ctermfg=White guibg=gray10 guifg=White
 
 set linespace=2

@@ -96,7 +96,7 @@ map <C-p> "+p
 
 """" Miscellaneous settings that might be worth enabling
 
-set background=dark    " configure Vim to use brighter colors
+set background=light   " configure Vim to use brighter colors
 set autoread           " autoreload the file in Vim if it has been changed outside of Vim
 
 " pretty print
