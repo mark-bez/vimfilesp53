@@ -13,7 +13,7 @@ let g:colors_name="markai"
 
 " Basic Layout {{{
 
-hi Normal          guifg=#F8F8F2 guibg=#1B1E1F
+hi Normal          guifg=#F8F8F2 guibg=#242829
 hi Folded          guifg=#707070 guibg=bg
 hi CursorLine                    guibg=#232728
 hi CursorColumn                  guibg=#232728

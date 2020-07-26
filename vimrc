@@ -12,7 +12,7 @@ set lazyredraw          " redraw screen only when we need to
 set showmatch           " highlight matching parentheses / brackets [{()}]
 set laststatus=2        " always show statusline (even with only single window)
 set ruler               " show line and column number of the cursor on right side of statusline
-set visualbell          " blink cursor on error, instead of beeping
+" set visualbell          " blink cursor on error, instead of beeping
 set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -24,7 +24,7 @@ set undodir=~/.vim/undodir " Saves undo steps to a file so you can redo even aft
 set undofile
 set nocompatible           " No need to be compatible with Vi which would come at the expense of some functionality
 " set gdefault               " applies find and replace subsitition globally by default. To only replace first occurrence use /g
-set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
+" set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
 set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
 
 
@@ -51,6 +51,7 @@ call plug#end()
 " nmap k gk
 
 :map <C-n> : NERDTree  " map the shortcut for NERDTree
+let NERDTreeHijackNetrw=1 "changes NERDTree from a project drawer to a split explorer - see http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/
 
 
 """" Vim Appearance
@@ -79,8 +80,8 @@ set hlsearch            " highlight matches
 nnoremap <CR> :nohlsearch<CR><CR>
 
 " map Esc key alternative to jk and kj
-" inoremap jk <ESC>
-" inoremap kj <ESC>
+inoremap jk <esc>
+inoremap kj <esc>
 
 " Shortcut for changing the window focus
 map <C-h> <C-w>h
@@ -105,8 +106,8 @@ command! PrettyPrintXML !tidy -mi -xml -wrap 0 %
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
+inoremap <A-j> <esc>:m .+1<CR>==gi
+inoremap <A-k> <esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
@@ -125,7 +126,7 @@ nnoremap ; :
 set filetype=on
 set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
-let mapleader = ","
+let mapleader = " "
 
 " strip all trailing whitespace with ,W
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
@@ -207,3 +208,6 @@ map g# <Plug>(incsearch-nohl-g#)
 " Insert date in normal and insert modes:
 :nnoremap <F6> "=strftime("%Y-%m-%d")<CR>P
 :inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
+
+" Maps system keyboard to Vim's buffer
+set clipboard=unnamedplus
