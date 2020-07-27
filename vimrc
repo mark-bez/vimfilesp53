@@ -211,4 +211,3 @@ map g# <Plug>(incsearch-nohl-g#)
 :nnoremap <F6> "=strftime("%Y-%m-%d")<CR>P
 :inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
 
-packloadall
