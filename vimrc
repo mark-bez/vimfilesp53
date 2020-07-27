@@ -37,7 +37,6 @@ Plug 'morhetz/gruvbox'
 Plug 'habamax/vim-asciidoctor'
 Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
-" post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -187,7 +186,10 @@ augroup asciidoctor
     au BufEnter *.adoc,*.asciidoc call AsciidoctorMappings()
 augroup END
 
-" opening window position and size
+" opening window position and It has been challenging and there is still more
+" to learn, but at this point I can't see myself going back to Sublime text
+" except for functions I can't do in Vim.
+" size
 winpos 1000 100
 winsize 150 70
 
@@ -209,5 +211,4 @@ map g# <Plug>(incsearch-nohl-g#)
 :nnoremap <F6> "=strftime("%Y-%m-%d")<CR>P
 :inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
 
-" Maps system keyboard to Vim's buffer
-set clipboard=unnamedplus
+packloadall
