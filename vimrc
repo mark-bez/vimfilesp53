@@ -22,7 +22,6 @@ set noswapfile
 set nobackup
 set undodir=~/.vim/undodir " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
-set nocompatible           " No need to be compatible with Vi which would come at the expense of some functionality
 " set gdefault               " applies find and replace subsitition globally by default. To only replace first occurrence use /g
 " set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
 set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
@@ -119,9 +118,6 @@ nnoremap <F3> :%s///gc<Left><Left><Left>
 nnoremap <tab> %
 vnoremap <tab> %
 
-" use semicolon to enter commandline instead of shift-; (:)
-nnoremap ; :
-
 set filetype=on
 set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
@@ -211,4 +207,3 @@ map g# <Plug>(incsearch-nohl-g#)
 :nnoremap <F6> "=strftime("%Y-%m-%d")<CR>P
 :inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
 
-packloadall
