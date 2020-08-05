@@ -1,7 +1,7 @@
 set guioptions-=T " Removes top toolbar
 " set guioptions-=r " Removes right hand scroll bar
 " set go-=L " Removes left hand scroll bar
-set guioptions-=m " Removes top menu bar
+" set guioptions-=m " Removes top menu bar
 
 
 colorscheme solarized8
@@ -14,7 +14,7 @@ set guicursor+=i:ver100-iCursor
 set guicursor+=i:blinkwait3000
 
 " set guifont=Monoid:h14:cANSI:qDRAFT
-set guifont=Fira_Code:h13:W300:cANSI:qDRAFT 
+set guifont=Roboto_Mono:h14:W300:cANSI:qDRAFT 
 
 " I used the following line with my markai colorscheme - however if I want to
 " back to this I need to transfer it to my colorscheme instead of here

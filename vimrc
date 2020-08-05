@@ -26,6 +26,7 @@ set undofile
 " set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
 set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
 
+cd $HOME/Documents/notes
 
 call plug#begin()
 Plug 'junegunn/goyo.vim'
@@ -208,7 +209,7 @@ map g# <Plug>(incsearch-nohl-g#)
 :inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
 
 " Mappings for fzf for finding buffers, files, and tags
-nmap ; :Buffers<CR>
+nmap <Leader>; :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>t :Tags<CR>
 
