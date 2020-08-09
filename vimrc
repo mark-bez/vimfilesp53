@@ -37,10 +37,16 @@ Plug 'morhetz/gruvbox'
 Plug 'habamax/vim-asciidoctor'
 Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'dense-analysis/ale'
+" post install (yarn install | npm install) then load plugin only for editing supported files
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 call plug#end()
+
+let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
 
 """" Key Bindings
 
@@ -151,10 +157,10 @@ let g:asciidoctor_executable = 'asciidoctor'
 let g:asciidoctor_extensions = ['asciidoctor-diagram', 'asciidoctor-rouge']
 
 " Path to the custom css
-let g:asciidoctor_css_path = '~/docs/AsciiDocThemes'
+let g:asciidoctor_css_path = '~\Documents\notes\css'
 
 " Custom css name to use instead of built-in
-let g:asciidoctor_css = 'haba-asciidoctor.css'
+let g:asciidoctor_css = 'asciidoctor-wide.css'
 
 " Conceal *bold*, _italic_, `code` and urls in lists and paragraphs, default `0`.
 " See limitations in end of the README
