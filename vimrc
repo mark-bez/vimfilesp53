@@ -217,3 +217,5 @@ nmap <Leader>t :Tags<CR>
 " so you can paste with p
 :nmap cp :let @" = expand("%")<CR>
 :nmap cP :let @" = expand("%:p")<CR>
+
+" Add mappings for splitting lines
