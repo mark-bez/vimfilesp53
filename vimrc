@@ -213,4 +213,7 @@ nmap <Leader>; :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>t :Tags<CR>
 
-
+" Copies current file path from pwd or complete file path to the unnamed register
+" so you can paste with p
+:nmap cp :let @" = expand("%")<CR>
+:nmap cP :let @" = expand("%:p")<CR>
