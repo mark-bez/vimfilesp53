@@ -26,11 +26,13 @@ set undofile
 " set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
 set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
 
-cd $HOME/Documents/notes
+cd $HOME/Documents
 
 call plug#begin()
 Plug 'junegunn/goyo.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+Plug 'stsewd/fzf-checkout.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'morhetz/gruvbox'
@@ -39,14 +41,13 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
+Plug 'w0rp/ale'
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 call plug#end()
-
-let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
 
 """" Key Bindings
 
@@ -58,7 +59,6 @@ let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use
 :map <C-n> : NERDTree  " map the shortcut for NERDTree
 let NERDTreeHijackNetrw=1 "changes NERDTree from a project drawer to a split explorer - see http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/
 
-
 """" Vim Appearance
 " use filetype-based syntax highlighting, ftplugins, and indentation
 syntax enable
@@ -67,7 +67,7 @@ filetype plugin indent on
 set cursorline         " highlight current line
 highlight LineNr guifg=#ffea00 guibg=gray
 highlight CursorLineNr gui=bold guifg=#ffffff guibg=#c0d0e0
-
+highlight iCursor guifg=white guibg=steelblue
 
 """" Tab settings
 set tabstop=4           " width that a <TAB> character displays as
@@ -84,9 +84,11 @@ set hlsearch            " highlight matches
 " turn off search highlighting with <CR> (carriage-return)
 nnoremap <CR> :nohlsearch<CR><CR>
 
-" map Esc key alternative to jk and kj
+" map Esc key alternative to jk and kj for insert mode and visual mode
 inoremap jk <esc>
 inoremap kj <esc>
+xnoremap jk <esc>
+xnoremap kj <esc>
 
 " Shortcut for changing the window focus
 map <C-h> <C-w>h
@@ -94,10 +96,16 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-" Map copy and past to ctrl-c and ctrl-p
+" open a new vertical split and switch over to it
+nnoremap <leader>w <C-w>v<C-w>l
+
+" Map copy and paste to ctrl-c and ctrl-p
 noremap <C-c> "+y
 map <C-p> "+p
 
+" move among buffers with CTRL
+map <C-J> :bnext<CR>
+map <C-K> :bprev<CR>
 
 """" Miscellaneous settings that might be worth enabling
 
@@ -108,6 +116,12 @@ set autoread           " autoreload the file in Vim if it has been changed outsi
 command! PrettyPrintHTML !tidy -mi -html -wrap 0 %
 command! PrettyPrintXML !tidy -mi -xml -wrap 0 %
 
+" Prettier autoformat on save
+let g:prettier#autoformat_require_pragma = 0
+
+" Remap to split a line on the cursor
+:map q i<C-m><esc>
+ 
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
@@ -136,8 +150,14 @@ nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 " open _vimrc file with ,ev (leader edit vim)
 nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 
-" open a new vertical split and switch over to it
-nnoremap <leader>w <C-w>v<C-w>l
+" Fugitive mappings
+nmap <leader>gs :G<CR>
+nmap <leader>gh :diffget //3<CR>
+nmap <leader>gl :diffget //2<CR>
+
+"let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
+nnoremap <leader>gc :GCheckout<CR>
 
 "setting this value forces wrapping even if nowrap is set
 "set textwidth=100
@@ -157,7 +177,7 @@ let g:asciidoctor_executable = 'asciidoctor'
 let g:asciidoctor_extensions = ['asciidoctor-diagram', 'asciidoctor-rouge']
 
 " Path to the custom css
-let g:asciidoctor_css_path = '~\Documents\notes\css'
+let g:asciidoctor_css_path = 'C:\Users\echo\Documents\notes\css'
 
 " Custom css name to use instead of built-in
 let g:asciidoctor_css = 'asciidoctor-wide.css'
@@ -192,7 +212,8 @@ augroup END
 " opening window position and It has been challenging and there is still more
 " to learn, but at this point I can't see myself going back to Sublime text
 " except for functions I can't do in Vim.
-" size
+
+" setting opening window size
 winpos 1000 100
 winsize 150 70
 
@@ -219,4 +240,24 @@ nmap <Leader>; :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>t :Tags<CR>
 
+" See https://medium.com/@jimeno0/eslint-and-prettier-in-vim-neovim-7e45f85cf8f9
+let g:ale_fixers = {
+\   'javascript': ['prettier'],
+\   'css': ['prettier','stylelint'],
+\}
 
+let g:ale_sign_error = 'x'
+let g:ale_sign_warning = '!'
+
+let g:ale_fix_on_save = 1
+let g:ale_linters_explicit = 1
+
+let g:ale_linters = {
+ \   'css': ['stylelint'],
+ \   'html': ['tidy'],
+ \   'javascript': ['eslint'],
+ \}
+
+let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.exe" 
+
+let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
