@@ -39,6 +39,7 @@ Plug 'morhetz/gruvbox'
 Plug 'habamax/vim-asciidoctor'
 Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " Plug 'dense-analysis/ale'
@@ -121,7 +122,7 @@ let g:prettier#autoformat_require_pragma = 0
 
 " Remap to split a line on the cursor
 :map q i<C-m><esc>
- 
+
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
@@ -133,7 +134,6 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 "Press * to search for the term under the cursor or a visual selection and then press a key below to replace all instances of it in the current file.
 nnoremap <F2> :%s///g<Left><Left>
 nnoremap <F3> :%s///gc<Left><Left><Left>
-
 
 " use tab to move around to bracket pairs
 nnoremap <tab> %
@@ -209,10 +209,6 @@ augroup asciidoctor
     au BufEnter *.adoc,*.asciidoc call AsciidoctorMappings()
 augroup END
 
-" opening window position and It has been challenging and there is still more
-" to learn, but at this point I can't see myself going back to Sublime text
-" except for functions I can't do in Vim.
-
 " setting opening window size
 winpos 1000 100
 winsize 150 70
@@ -261,3 +257,9 @@ let g:ale_linters = {
 let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.exe" 
 
 let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
+
+" Copies current file path from present working directory onwards to the unnamed register so you can paste with p
+:nmap cp :let @" = expand("%")<CR>
+
+" Copies current complete file path to the unnamed register so you can paste with p
+:nmap cP :let @" = expand("%:p")<CR>
