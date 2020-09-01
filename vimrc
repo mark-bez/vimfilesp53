@@ -264,6 +264,9 @@ let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use
 " Copies current complete file path to the unnamed register so you can paste with p
 :nmap cP :let @" = expand("%:p")<CR> 
 
+" splits the line on a character with q in Normal mode
+nmap q i<C-m><esc>
+
 " .............................................................................
 " lambdalisue/fern.vim
 " .............................................................................
