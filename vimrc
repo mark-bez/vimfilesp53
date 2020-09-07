@@ -236,16 +236,18 @@ nmap <Leader>t :Tags<CR>
 nmap m i<C-m><esc>
 
 " pretty print for use with HTML Tidy
-command! tidyHTML !tidy -mi -html -wrap 0 %
-command! tidyXML !tidy -mi -xml -wrap 0 %
+command! TidyHTML !tidy -mi -html -wrap 0 %
+command! TidyXML !tidy -mi -xml -wrap 0 %
+
+let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.exe" 
 
 " Prettier autoformat on save
 let g:prettier#autoformat_require_pragma = 0
 
 " See https://medium.com/@jimeno0/eslint-and-prettier-in-vim-neovim-7e45f85cf8f9
 let g:ale_fixers = {
-\   'javascript': ['prettier'],
-\   'css': ['prettier','stylelint'],
+\   'javascript': ['eslint'],
+\   'css': ['stylelint'],
 \}
 
 let g:ale_sign_error = 'x'
@@ -260,10 +262,7 @@ let g:ale_linters = {
  \   'javascript': ['eslint'],
  \}
 
-let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.exe" 
-
 let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
-
 
 " .............................................................................
 " lambdalisue/fern.vim
