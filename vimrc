@@ -1,6 +1,5 @@
 """" Basic Behavior
 
-syntax on
 set guicursor=
 set number              " show line numbers
 set rnu                 " set relative line numbers
@@ -22,7 +21,7 @@ set noswapfile
 set nobackup
 set undodir=~/.vim/undodir " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
-" set gdefault               " applies find and replace subsitition globally by default. To only replace first occurrence use /g
+set gdefault               " applies find and replace subsitition globally by default. To only replace first occurrence use /g
 " set list lcs=eol:¬,space:. " sets whitespace characters for end of line and spaces. To turn off, :set nolist
 set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
 
@@ -40,7 +39,6 @@ Plug 'morhetz/gruvbox'
 Plug 'habamax/vim-asciidoctor'
 Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " Plug 'dense-analysis/ale'
@@ -114,15 +112,7 @@ map <C-K> :bprev<CR>
 set background=light   " configure Vim to use brighter colors
 set autoread           " autoreload the file in Vim if it has been changed outside of Vim
 
-" pretty print
-command! PrettyPrintHTML !tidy -mi -html -wrap 0 %
-command! PrettyPrintXML !tidy -mi -xml -wrap 0 %
 
-" Prettier autoformat on save
-let g:prettier#autoformat_require_pragma = 0
-
-" Remap to split a line on the cursor
-:map q i<C-m><esc>
 
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
@@ -151,20 +141,19 @@ nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 " open _vimrc file with ,ev (leader edit vim)
 nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 
-" Fugitive mappings
+" Fugitive Git plugin mappings
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gl :diffget //2<CR>
+nnoremap <leader>gc :GCheckout<CR>
 
 "let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
-nnoremap <leader>gc :GCheckout<CR>
 
 "setting this value forces wrapping even if nowrap is set
 "set textwidth=100
 
 "" habamax/asciidoctor plugin settings
-
 " Fold sections, default `0`.
 let g:asciidoctor_folding = 1
 
@@ -211,8 +200,8 @@ augroup asciidoctor
 augroup END
 
 " setting opening window size
-winpos 1000 100
-winsize 150 70
+winpos 1020 50
+winsize 130 70
 
 " Used with incsearch plugin to hide highlights after moving the cursor following a search
 set hlsearch
@@ -237,6 +226,22 @@ nmap <Leader>; :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>t :Tags<CR>
 
+" Copies the current file path from present working directory onwards to the unnamed register so you can paste with p
+:nmap cp :let @" = expand("%")<CR>
+
+" Copies the current complete file path to the unnamed register so you can paste with p
+:nmap cP :let @" = expand("%:p")<CR> 
+
+" splits the line on a character with q in Normal mode
+nmap m i<C-m><esc>
+
+" pretty print for use with HTML Tidy
+command! tidyHTML !tidy -mi -html -wrap 0 %
+command! tidyXML !tidy -mi -xml -wrap 0 %
+
+" Prettier autoformat on save
+let g:prettier#autoformat_require_pragma = 0
+
 " See https://medium.com/@jimeno0/eslint-and-prettier-in-vim-neovim-7e45f85cf8f9
 let g:ale_fixers = {
 \   'javascript': ['prettier'],
@@ -259,14 +264,6 @@ let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.
 
 let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
 
-" Copies current file path from present working directory onwards to the unnamed register so you can paste with p
-:nmap cp :let @" = expand("%")<CR>
-
-" Copies current complete file path to the unnamed register so you can paste with p
-:nmap cP :let @" = expand("%:p")<CR> 
-
-" splits the line on a character with q in Normal mode
-nmap q i<C-m><esc>
 
 " .............................................................................
 " lambdalisue/fern.vim
@@ -350,3 +347,7 @@ nnoremap <Leader>/ :Ack!<Space>
 " Navigate quickfix list with ease
 nnoremap <silent> [q :cprevious<CR>
 nnoremap <silent> ]q :cnext<CR>
+
+" This setting must be at toward the bottom for it to work. 
+" It maps cd to change the working directory to the directory of active file
+nnoremap <leader>cd :cd %:p:h<CR>
