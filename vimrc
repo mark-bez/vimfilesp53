@@ -350,3 +350,6 @@ nnoremap <silent> ]q :cnext<CR>
 " This setting must be at toward the bottom for it to work. 
 " It maps cd to change the working directory to the directory of active file
 nnoremap <leader>cd :cd %:p:h<CR>
+
+" autocloses html and xml tags
+inoremap ><Tab> ><Esc>F<lyt>o</<C-r>"><Esc>O<Space>
