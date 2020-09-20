@@ -19,7 +19,6 @@ function! s:executor(factory, options, resolve, reject) abort
         \ 'locator': a:options.is_drawer,
         \ 'keepalt': !a:options.is_drawer && g:fern#keepalt_on_edit,
         \ 'keepjumps': !a:options.is_drawer && g:fern#keepjumps_on_edit,
-        \ 'mods': 'noautocmd',
         \})
 
   setlocal buftype=acwrite bufhidden=wipe
@@ -98,7 +97,7 @@ function! s:BufWriteCmd() abort
     for Modifier in b:fern_replacer_modifiers
       let result = Modifier(result)
     endfor
-    let Resolve = b:fern_replacer_resolve
+    let l:Resolve = b:fern_replacer_resolve
     set nomodified
     close
     call Resolve(result)

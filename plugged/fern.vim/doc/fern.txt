@@ -393,6 +393,40 @@ VARIABLE						*fern-variable*
 	Set 1 to disable automatic Vim quit when there is only drawer.
 	Default: 0 
 
+*g:fern#disable_drawer_auto_restore_focus*
+	Set 1 to disable automatic focus restore on drawer close.
+	The behavior changes like: (# indicate the cursor)
+>
+	g:fern#disable_drawer_auto_restore_focus = 0
+	                        +---------------+---------------+
+	                        |               |#              |
+	                        |               |               |
+	                        +---------------+---------------+
+	:Fern . -drawer -stay   +----+------------+-------------+
+	                        |    |            |#            |
+	                        |    |            |             |
+	                        +----+------------+-------------+
+	:Fern . -drawer -toggle +---------------+---------------+
+	                        |               |#              |
+	                        |               |               |
+	                        +---------------+---------------+
+
+	g:fern#disable_drawer_auto_restore_focus = 1
+	                        +---------------+---------------+
+	                        |               |#              |
+	                        |               |               |
+	                        +---------------+---------------+
+	:Fern . -drawer -stay   +----+------------+-------------+
+	                        |    |            |#            |
+	                        |    |            |             |
+	                        +----+------------+-------------+
+	:Fern . -drawer -toggle +---------------+---------------+
+	                        |#              |               |
+	                        |               |               |
+	                        +---------------+---------------+
+<
+	Default: 0 
+
 *g:fern#default_hidden*
 	Set 1 to enter hidden mode (show hidden files) in default.
 	Default: 0
@@ -428,6 +462,11 @@ VARIABLE						*fern-variable*
 	A |String| which is used as a mark symbol text.
 	Note that users must restart Vim to apply changes.
 	Default: "*"
+
+*g:fern#scheme#file#show_absolute_path_on_root_label*
+	A |Boolean| to show an absolute path of the root node of "file" scheme
+	as a label of the node.
+	Default: 0
 
 -----------------------------------------------------------------------------
 COMMAND							*fern-command*
