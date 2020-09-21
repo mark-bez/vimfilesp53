@@ -277,12 +277,12 @@ winsize 130 70
 " -----------------------------------------------------------------------------
 
 " Insert date and time in normal and insert modes:
-:nnoremap <F5> "=strftime("%Y-%m-%d %H:%M")<CR>P
-:inoremap <F5> <C-R>=strftime("%Y-%m-%d %H:%M")<CR>
+:nnoremap <F6> "=strftime("%Y-%m-%d %H:%M")<CR>P
+:inoremap <F6> <C-R>=strftime("%Y-%m-%d %H:%M")<CR>
 
 " Insert date in normal and insert modes:
-:nnoremap <F6> "=strftime("%Y-%m-%d")<CR>P
-:inoremap <F6> <C-R>=strftime("%Y-%m-%d")<CR>
+:nnoremap <F5> "=strftime("%Y-%m-%d")<CR>P
+:inoremap <F5> <C-R>=strftime("%Y-%m-%d")<CR>
 
 " -----------------------------------------------------------------------------
 " Copy file paths
