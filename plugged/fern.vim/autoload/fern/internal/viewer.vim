@@ -8,10 +8,14 @@ function! fern#internal#viewer#open(fri, options) abort
 endfunction
 
 function! fern#internal#viewer#init() abort
-  let bufnr = bufnr('%')
-  return s:init()
-        \.then({ -> s:notify(bufnr, v:null) })
-        \.catch({ e -> s:Lambda.pass(e, s:notify(bufnr, e)) })
+  try
+    let bufnr = bufnr('%')
+    return s:init()
+          \.then({ -> s:notify(bufnr, v:null) })
+          \.catch({ e -> s:Lambda.pass(s:Promise.reject(e), s:notify(bufnr, e)) })
+  catch
+    return s:Promise.reject(v:exception)
+  endtry
 endfunction
 
 function! fern#internal#viewer#reveal(helper, path) abort
@@ -36,32 +40,24 @@ function! s:open(bufname, options, resolve, reject) abort
 endfunction
 
 function! s:init() abort
-  execute printf(
-        \ 'command! -buffer -bar -nargs=* -complete=customlist,%s FernReveal call s:reveal([<f-args>])',
-        \ get(funcref('s:reveal_complete'), 'name'),
-        \)
+  command! -buffer -bar -nargs=*
+        \ -complete=customlist,fern#internal#command#reveal#complete
+        \ FernReveal
+        \ call fern#internal#command#reveal#command(<q-mods>, [<f-args>])
 
   setlocal buftype=nofile bufhidden=unload
   setlocal noswapfile nobuflisted nomodifiable
   setlocal signcolumn=yes
 
-  augroup fern_viewer_internal
+  augroup fern_internal_viewer_init
     autocmd! * <buffer>
     autocmd BufEnter <buffer> setlocal nobuflisted
     autocmd BufReadCmd <buffer> ++nested call s:BufReadCmd()
     autocmd ColorScheme <buffer> call s:ColorScheme()
     autocmd CursorMoved,CursorMovedI,BufLeave <buffer> let b:fern_cursor = getcurpos()[1:2]
-
-    if !g:fern#disable_viewer_auto_duplication
-      autocmd WinEnter <buffer> ++nested call s:WinEnter()
-    endif
-
-    if !g:fern#disable_viewer_hide_cursor
-      autocmd BufEnter,WinEnter,CmdwinLeave,CmdlineLeave <buffer> setlocal cursorline
-      autocmd BufEnter,WinEnter,CmdwinLeave,CmdlineLeave <buffer> call fern#internal#cursor#hide()
-      autocmd BufLeave,WinLeave,CmdwinEnter,CmdlineEnter,VimLeave <buffer> call fern#internal#cursor#restore()
-    endif
   augroup END
+  call fern#internal#viewer#auto_duplication#init()
+  call fern#internal#viewer#smart_cursor#init()
 
   " Add unique fragment to make each buffer uniq
   let bufname = bufname('%')
@@ -78,42 +74,38 @@ function! s:init() abort
   let scheme = fern#fri#parse(resource_uri).scheme
   let provider = fern#internal#scheme#provider_new(scheme)
   if provider is# v:null
-    return s:Promise.reject(printf('no such scheme %s exists', scheme))
+    throw printf('no such scheme %s exists', scheme)
   endif
 
-  try
-    let b:fern = fern#internal#core#new(
-          \ resource_uri,
-          \ provider,
-          \)
-    let helper = fern#helper#new()
-    let root = helper.sync.get_root_node()
+  let b:fern = fern#internal#core#new(
+        \ resource_uri,
+        \ provider,
+        \)
+  let helper = fern#helper#new()
+  let root = helper.sync.get_root_node()
 
-    call fern#mapping#init(scheme)
-    call fern#internal#drawer#init()
-    call fern#internal#spinner#start()
-    call helper.fern.renderer.highlight()
-    call fern#hook#emit('viewer:highlight', helper)
-    doautocmd <nomodeline> User FernHighlight
+  call fern#mapping#init(scheme)
+  call fern#internal#drawer#init()
+  call fern#internal#spinner#start()
+  call helper.fern.renderer.highlight()
+  call fern#hook#emit('viewer:highlight', helper)
+  doautocmd <nomodeline> User FernHighlight
 
-    " now the buffer is ready so set filetype to emit FileType
-    setlocal filetype=fern
-    call helper.fern.renderer.syntax()
-    call fern#hook#emit('viewer:syntax', helper)
-    doautocmd <nomodeline> User FernSyntax
-    call fern#action#_init()
+  " now the buffer is ready so set filetype to emit FileType
+  setlocal filetype=fern
+  call helper.fern.renderer.syntax()
+  call fern#hook#emit('viewer:syntax', helper)
+  doautocmd <nomodeline> User FernSyntax
+  call fern#action#_init()
 
-    let l:Profile = fern#profile#start('fern#internal#viewer:init')
-    return s:Promise.resolve()
-          \.then({ -> helper.async.expand_node(root.__key) })
-          \.finally({ -> Profile('expand') })
-          \.then({ -> helper.async.redraw() })
-          \.finally({ -> Profile('redraw') })
-          \.finally({ -> Profile() })
-          \.then({ -> fern#hook#emit('viewer:ready', helper) })
-  catch
-    return s:Promise.reject(v:exception)
-  endtry
+  let l:Profile = fern#profile#start('fern#internal#viewer:init')
+  return s:Promise.resolve()
+        \.then({ -> helper.async.expand_node(root.__key) })
+        \.finally({ -> Profile('expand') })
+        \.then({ -> helper.async.redraw() })
+        \.finally({ -> Profile('redraw') })
+        \.finally({ -> Profile() })
+        \.then({ -> fern#hook#emit('viewer:ready', helper) })
 endfunction
 
 function! s:notify(bufnr, error) abort
@@ -126,70 +118,6 @@ function! s:notify(bufnr, error) abort
       call notifier.reject([a:bufnr, a:error])
     endif
   endif
-endfunction
-
-function! s:cache_content(helper) abort
-  let bufnr = a:helper.bufnr
-  let content = getbufline(bufnr, 1, '$')
-  call setbufvar(bufnr, 'fern_viewer_cache_content', content)
-endfunction
-
-function! s:reveal(fargs) abort
-  try
-    let wait = fern#internal#args#pop(a:fargs, 'wait', v:false)
-    if len(a:fargs) isnot# 1
-          \ || type(wait) isnot# v:t_bool
-      throw 'Usage: FernReveal {reveal} [-wait]'
-    endif
-
-    " Does all options are handled?
-    call fern#internal#args#throw_if_dirty(a:fargs)
-
-    let expr = expand(a:fargs[0])
-    let helper = fern#helper#new()
-    let promise = fern#internal#viewer#reveal(helper, expr)
-
-    if wait
-      let [_, err] = s:Promise.wait(
-            \ promise,
-            \ {
-            \   'interval': 100,
-            \   'timeout': 5000,
-            \ },
-            \)
-      if err isnot# v:null
-        throw printf('[fern] Failed to wait: %s', err)
-      endif
-    endif
-  catch
-    echohl ErrorMsg
-    echomsg v:exception
-    echohl None
-    call fern#logger#debug(v:exception)
-    call fern#logger#debug(v:throwpoint)
-  endtry
-endfunction
-
-function! s:reveal_complete(arglead, cmdline, cursorpos) abort
-  let helper = fern#helper#new()
-  let fri = fern#fri#parse(bufname('%'))
-  let scheme = helper.fern.scheme
-  let cmdline = fri.path
-  let arglead = printf('-reveal=%s', a:arglead)
-  let rs = fern#internal#complete#reveal(arglead, cmdline, a:cursorpos)
-  return map(rs, { -> matchstr(v:val, '-reveal=\zs.*') })
-endfunction
-
-function! s:WinEnter() abort
-  if len(win_findbuf(bufnr('%'))) < 2
-    return
-  endif
-  " Only one window is allowed to display one fern buffer.
-  " So create a new fern buffer with same options
-  let fri = fern#fri#parse(bufname('%'))
-  let fri.authority = ''
-  let bufname = fern#fri#format(fri)
-  execute printf('silent! keepalt edit %s', fnameescape(bufname))
 endfunction
 
 function! s:BufReadCmd() abort
@@ -217,14 +145,16 @@ function! s:ColorScheme() abort
   doautocmd <nomodeline> User FernHighlight
 endfunction
 
-augroup fern-internal-viewer-internal
+augroup fern_internal_viewer
   autocmd!
   autocmd User FernSyntax :
   autocmd User FernHighlight :
 augroup END
 
 " Cache content to accelerate rendering
-call fern#hook#add('viewer:redraw', { h -> s:cache_content(h) })
+call fern#hook#add('viewer:redraw', { h ->
+      \ setbufvar(h.bufnr, 'fern_viewer_cache_content', getbufline(h.bufnr, 1, '$'))
+      \})
 
 " Deprecated:
 call fern#hook#add('viewer:highlight', { h -> fern#hook#emit('renderer:highlight', h) })

@@ -46,13 +46,14 @@ set splitbelow
 set splitright
 set tabstop=2           " width that a <TAB> character displays as
 set textwidth=0
+set updatetime=100      "for vim-signify async updating
 set softtabstop=2       " backspace after pressing <TAB> will remove up to this many spaces
 set undodir=~/.vim/undodir " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
 set wildmenu            " visual autocomplete for command menu
 
 " -----------------------------------------------------------------------------
-" Sets current directory on startup
+" Set current directory on startup
 " -----------------------------------------------------------------------------
 
 cd $HOME/Documents
@@ -78,12 +79,6 @@ Plug 'unblevable/quick-scope'
 
 " Better display unwanted whitespace.
 Plug 'ntpeters/vim-better-whitespace'
-
-" Drastically improve insert mode performance in files with folds.
-Plug 'Konfekt/FastFold'
-
-" Show git file changes in the gutter.
-Plug 'mhinz/vim-signify'
 
 " A git wrapper.
 Plug 'tpope/vim-fugitive'
@@ -187,8 +182,21 @@ map <C-l> <C-w>l
 nnoremap <leader>w <C-w>v<C-w>l
 
 " move among buffers with CTRL
-map <C-J> :bnext<CR>
-map <C-K> :bprev<CR>
+" map <C-J> :bnext<CR>
+" map <C-K> :bprev<CR>
+nnoremap <silent> [b :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [B :bfirst<CR>
+nnoremap <silent> [B :blast<CR>
+
+" close the current buffer and move to the previous one
+noremap <leader>bq :<c-u>bp <bar> bd #<cr>
+
+" show all open buffers and their status
+noremap <leader>bl :ls<cr>
+
+" close all open buffers except the current one
+noremap <leader>bd :<c-u> %bd <bar> e#<cr>
 
 " splits the line on a character in Normal mode when pressing m
 nmap m i<C-m><esc>
@@ -213,7 +221,7 @@ set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ 
 
 let mapleader = " "
 
-" strip all trailing whitespace with ,W
+" strip all trailing whitespace - using a plugin now instead
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 
 " open _vimrc file with ,ev (leader edit vim)
@@ -249,8 +257,8 @@ nnoremap <silent> <Leader>c :call QuickFix_toggle()<CR>
 " Basic autocommands
 " -----------------------------------------------------------------------------
 
-" Auto-resize splits when Vim gets resized.
-autocmd VimResized * wincmd =
+" Auto-resize splits when Vim gets resized - turned off as inconvenient
+" autocmd VimResized * wincmd =
 
 " Update a buffer's contents on focus if it changed outside of Vim.
 au FocusGained,BufEnter * :checktime
@@ -356,13 +364,6 @@ let g:strip_whitelines_at_eof=1
 let g:strip_whitespace_on_save=1
 
 " .............................................................................
-" Konfekt/FastFold
-" .............................................................................
-
-let g:fastfold_savehook=0
-let g:fastfold_fold_command_suffixes=[]
-
-" .............................................................................
 " unblevable/quick-scope
 " .............................................................................
 
@@ -389,11 +390,11 @@ let g:asciidoctor_executable = 'asciidoctor'
 " What extensions to use for HTML, default `[]`.
 let g:asciidoctor_extensions = ['asciidoctor-diagram', 'asciidoctor-rouge']
 
-" Path to the custom css
-let g:asciidoctor_css_path = 'C:\Users\echo\Documents\notes\css'
+" Path to the custom css - turned off so I can specify as a file attribute
+" let g:asciidoctor_css_path = 'C:\Users\echo\Documents\notes\css'
 
-" Custom css name to use instead of built-in
-let g:asciidoctor_css = 'asciidoctor-wide.css'
+" Custom css name to use instead of built-in - turned off so I can specify as a file attribute
+" let g:asciidoctor_css = 'asciidoctor-wide.css'
 
 " Conceal *bold*, _italic_, `code` and urls in lists and paragraphs, default `0`.
 " See limitations in end of the README
@@ -551,6 +552,7 @@ inoremap ><Tab> ><Esc>F<lyt>o</<C-r>"><Esc>O<Space>
 " This setting must be at toward the bottom for it to work.
 " It maps cd to change the working directory to the directory of active file
 nnoremap <leader>cd :cd %:p:h<CR>
+nnoremap <leader>ld :lcd %:p:h<CR>
 
 " -----------------------------------------------------------------------------
 " Enable use of standard Windows copy and paste commands

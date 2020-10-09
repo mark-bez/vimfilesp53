@@ -41,5 +41,6 @@ call s:Config.config(expand('<sfile>:p'), {
       \   'open',
       \   'tree',
       \   'wait',
+      \   'yank',
       \ ],
       \})
