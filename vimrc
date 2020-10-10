@@ -104,6 +104,12 @@ Plug 'haya14busa/incsearch.vim'
 
 Plug 'othree/xml.vim'
 
+" bufkill
+Plug 'qpkorr/vim-bufkill'
+
+" vim-ctrlspace for managing projects
+" Plug 'szw/vim-ctrlspace'
+
 " Integrate fzf with Vim.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -121,8 +127,6 @@ Plug 'prettier/vim-prettier', {
 call plug#end()
 
 " Languages and file types.
-Plug 'chrisbra/csv.vim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 Plug 'othree/html5.vim'
 Plug 'tpope/vim-git'
 
@@ -334,6 +338,9 @@ let $FZF_DEFAULT_OPTS='--reverse'
 nmap <Leader>; :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>t :Tags<CR>
+
+" If installed using git
+Plug '~/.fzf'
 
 " .............................................................................
 " Prettier
@@ -551,8 +558,8 @@ inoremap ><Tab> ><Esc>F<lyt>o</<C-r>"><Esc>O<Space>
 
 " This setting must be at toward the bottom for it to work.
 " It maps cd to change the working directory to the directory of active file
-nnoremap <leader>cd :cd %:p:h<CR>
-nnoremap <leader>ld :lcd %:p:h<CR>
+" nnoremap <leader>cd :cd %:p:h<CR>
+nnoremap <leader>cd :lcd %:h<CR>
 
 " -----------------------------------------------------------------------------
 " Enable use of standard Windows copy and paste commands
