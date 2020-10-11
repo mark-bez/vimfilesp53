@@ -91,6 +91,7 @@ Plug 'itchyny/lightline.vim'
 
 " Show git file changes in the gutter.
 Plug 'mhinz/vim-signify'
+
 "Plug 'airblade/vim-gitgutter'
 
 " Better display unwanted whitespace.
@@ -105,7 +106,7 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'othree/xml.vim'
 
 " bufkill
-Plug 'qpkorr/vim-bufkill'
+" Plug 'qpkorr/vim-bufkill'
 
 " vim-ctrlspace for managing projects
 " Plug 'szw/vim-ctrlspace'
@@ -483,7 +484,7 @@ endfunction
 " Custom settings and mappings.
 let g:fern#disable_default_mappings = 1
 
-noremap <silent> <Leader>n :Fern . -drawer -reveal=% -toggle -width=45<CR><C-w>=
+noremap <silent> <Leader>n :Fern %:h -drawer -toggle -width=45<CR><C-w>l
 
 function! FernInit() abort
   nmap <buffer><expr>
