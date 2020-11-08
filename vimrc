@@ -1,56 +1,48 @@
-" -----------------------------------------------------------------------------
-" This config is targeted for Vim 8.0+ and expects you to have Plug installed.
-" -----------------------------------------------------------------------------
-
-" -----------------------------------------------------------------------------
-" Basic Settings
-" Research any of these by running :help <setting>
-" -----------------------------------------------------------------------------
-
-set autoindent          " copy indent from current line when starting a new line
-set autoread           " autoreload the file in Vim if it has been changed outside of Vim
-set background=light   " configure Vim to use brighter colors
+set autoindent                 " copy indent from current line when starting a new line
+set autoread                   " autoreload the file in Vim if it has been changed outside of Vim
 set backspace=indent,eol,start " Allows you to backspace to the left of the Insert mode entry character
 set backupdir=/tmp//,.
-set cursorline         " highlight current line
+" set clipboard=unnamed        " text copied from Vim can be pasted using ctrl-v
+" set clipboard=unnamedplus    " text copied using ctrl-c can be pasted into Vim using p
+set cursorline                 " highlight current line
 set directory=/tmp//,.
-set encoding=utf-8      " set encoding to UTF-8 (default was "latin1")
-set expandtab smarttab " convert <TAB> key-presses to spaces
+set encoding=utf-8             " set encoding to UTF-8 (default was "latin1")
+set expandtab smarttab         " convert <TAB> key-presses to spaces
 set filetype=on
-set gdefault               " Applies find and replace subsitition globally by default. To only replace first occurrence use /g
-set guicursor=
-set hidden                 " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
-set hlsearch            " highlight search matches
-set incsearch           " search as characters are entered, which is incremental search
-set laststatus=2        " always show statusline (even with only single window)
-set lazyredraw          " redraw screen only when we need to
-set matchpairs+=<:> " Use % to jump between pairs
-set number              " show line numbers
-set mouse=a             " enable mouse support (might not work well on Mac OS X)
+set hidden                     " It hides buffers instead of closing them. This means that you can have unwritten changes to a file and open a new file using :e, without being forced to write or undo your changes first.
+set hlsearch                   " highlight search matches
+set incsearch                  " search as characters are entered, which is incremental search
+set laststatus=2               " always show statusline (even with only single window)
+set lazyredraw                 " redraw screen only when we need to
+set matchpairs+=<:>            " Use % to jump between pairs
+set number                     " show line numbers
+set mouse=a                    " enable mouse support (might not work well on Mac OS X)
 set nobackup
-set nocompatible                " This should be set by default in Vim8, but just in case
+set nocompatible               " This should be set by default in Vim8, but just in case
 set nostartofline
 set noswapfile
-set nowrap              " do not wrap lines
+set nowrap                     " do not wrap lines
 set regexpengine=1
-set relativenumber               " set relative line numbers
-set ruler               " show line and column number of the cursor on right side of statusline
-set shiftwidth=2        " number of spaces to use for each step of (auto)indent
+set relativenumber             " set relative line numbers
+set ruler                      " show line and column number of the cursor on right side of statusline
+set scrolloff=3                " keep three lines between the cursor and the edge of the screen
+set shiftwidth=2               " number of spaces to use for each step of (auto)indent
 set showcmd
-set showmatch           " highlight matching parentheses / brackets [{()}]
+set showmatch                  " highlight matching parentheses / brackets [{()}]
 set showmode
 set smartcase
-set smartindent         " even better autoindent (e.g. add indent after '{')
+set smartindent                " even better autoindent (e.g. add indent after '{')
 set spelllang=en_us
 set splitbelow
 set splitright
-set tabstop=2           " width that a <TAB> character displays as
+set tabstop=2                  " width that a <TAB> character displays as
 set textwidth=0
-set updatetime=100      "for vim-signify async updating
-set softtabstop=2       " backspace after pressing <TAB> will remove up to this many spaces
-set undodir=~/.vim/undodir " Saves undo steps to a file so you can redo even after exiting Vim
+set timeoutlen=500
+set updatetime=200             " for vim-signify async updating
+set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
+set undodir=~/.vim/undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
-set wildmenu            " visual autocomplete for command menu
+set wildmenu                   " visual autocomplete for command menu
 
 " -----------------------------------------------------------------------------
 " Set current directory on startup
@@ -77,9 +69,6 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight which character to jump to when using horizontal movement keys.
 Plug 'unblevable/quick-scope'
 
-" Better display unwanted whitespace.
-Plug 'ntpeters/vim-better-whitespace'
-
 " A git wrapper.
 Plug 'tpope/vim-fugitive'
 
@@ -103,13 +92,13 @@ Plug 'habamax/vim-asciidoctor'
 " Automatically clear search highlights after you move your cursor.
 Plug 'haya14busa/incsearch.vim'
 
+" Adds file tree icons
+Plug 'ryanoasis/vim-devicons'
+
 Plug 'othree/xml.vim'
 
 " bufkill
 " Plug 'qpkorr/vim-bufkill'
-
-" vim-ctrlspace for managing projects
-" Plug 'szw/vim-ctrlspace'
 
 " Integrate fzf with Vim.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -130,6 +119,9 @@ call plug#end()
 " Languages and file types.
 Plug 'othree/html5.vim'
 Plug 'tpope/vim-git'
+
+" Font size changer
+Plug 'drmikehenry/vim-fontsize'
 
 call plug#end()
 
@@ -186,22 +178,11 @@ map <C-l> <C-w>l
 " open a new vertical split and switch over to it
 nnoremap <leader>w <C-w>v<C-w>l
 
-" move among buffers with CTRL
-" map <C-J> :bnext<CR>
-" map <C-K> :bprev<CR>
+" move among buffers
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> [B :blast<CR>
-
-" close the current buffer and move to the previous one
-noremap <leader>bq :<c-u>bp <bar> bd #<cr>
-
-" show all open buffers and their status
-noremap <leader>bl :ls<cr>
-
-" close all open buffers except the current one
-noremap <leader>bd :<c-u> %bd <bar> e#<cr>
 
 " splits the line on a character in Normal mode when pressing m
 nmap m i<C-m><esc>
@@ -224,10 +205,9 @@ vnoremap <tab> %
 
 set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
+" set the mapleader
 let mapleader = " "
-
-" strip all trailing whitespace - using a plugin now instead
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+let g:mapleader = " "
 
 " open _vimrc file with ,ev (leader edit vim)
 "nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
@@ -239,10 +219,10 @@ map <F7> :setlocal spell!<CR>
 " Toggle relative line numbers and regular line numbers.
 nmap <F8> :set invrelativenumber<CR>
 
-" Toggle visually showing all whitespace charactersT - to turn off, :set nolist
-noremap <F9> :set list!<CR>
-inoremap <F9> <C-o>:set list!<CR>
-cnoremap <F9> <C-c>:set list!<CR>
+" using plugin instead now - to delete -  Toggle visually showing all whitespace charactersT - to turn off, :set nolist
+" noremap <F9> :set list!<CR>
+" inoremap <F9> <C-o>:set list!<CR>
+" cnoremap <F9> <C-c>:set list!<CR>
 
 " Toggle quickfix window.
 function! QuickFix_toggle()
@@ -261,9 +241,6 @@ nnoremap <silent> <Leader>c :call QuickFix_toggle()<CR>
 " -----------------------------------------------------------------------------
 " Basic autocommands
 " -----------------------------------------------------------------------------
-
-" Auto-resize splits when Vim gets resized - turned off as inconvenient
-" autocmd VimResized * wincmd =
 
 " Update a buffer's contents on focus if it changed outside of Vim.
 au FocusGained,BufEnter * :checktime
@@ -367,8 +344,8 @@ map g# <Plug>(incsearch-nohl-g#)
 " ntpeters/vim-better-whitespace
 " .............................................................................
 
-let g:strip_whitespace_confirm=0
-let g:strip_whitelines_at_eof=1
+let g:better_whitespace_enabled=1
+let g:better_whitespace_ctermcolor=125
 let g:strip_whitespace_on_save=1
 
 " .............................................................................
@@ -378,9 +355,11 @@ let g:strip_whitespace_on_save=1
 " Trigger a highlight in the appropriate direction when pressing these keys.
 let g:qs_highlight_on_keys=['f', 'F', 't', 'T']
 
-" Only underline the highlights instead of using custom colors.
-highlight QuickScopePrimary gui=underline cterm=underline
-highlight QuickScopeSecondary gui=underline cterm=underline
+augroup qs_colors
+  autocmd!
+  autocmd ColorScheme * highlight QuickScopePrimary guifg='#af005f' gui=underline ctermfg=155 cterm=underline
+  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#0087ff' gui=underline ctermfg=81 cterm=underline
+augroup END
 
 " .............................................................................
 " habamax/asciidoctor plugin settings
@@ -484,7 +463,7 @@ endfunction
 " Custom settings and mappings.
 let g:fern#disable_default_mappings = 1
 
-noremap <silent> <Leader>n :Fern %:h -drawer -toggle -width=45<CR><C-w>l
+noremap <silent> <Leader>n :Fern %:h -reveal=% -drawer -toggle -width=45<CR><C-w>l
 
 function! FernInit() abort
   nmap <buffer><expr>
@@ -538,6 +517,7 @@ cnoreabbrev Ack Ack!
 " Maps <leader>/ so we're ready to type the search keyword
 nnoremap <Leader>/ :Ack!<Space>
 
+
 " -----------------------------------------------------------------------------
 " Quickfix list
 " -----------------------------------------------------------------------------
@@ -566,6 +546,12 @@ nnoremap <leader>cd :lcd %:h<CR>
 " Enable use of standard Windows copy and paste commands
 " -----------------------------------------------------------------------------
 
-" Map copy and paste to ctrl-c and ctrl-p
-noremap <C-c> "+y
+" use ctrl-c in normal and visual modes to store in the Windows clipboar
+nnoremap <C-c> "+y
+vnoremap <C-c> "+y
+
+" while in any Vim mode, use ctrl-p to paste into Vim from the Windows clipboard
 map <C-p> "+p
+
+" use ctrl-x in normal and visual modes of Vim to cut and store in the Windows clipboard
+map <C-x> "+x
