@@ -405,6 +405,12 @@ VARIABLE						*fern-variable*
 	See |fern-action-mappings| for more detail.
 	Default: 0
 
+*g:fern#disable_viewer_spinner*
+	Set 1 to disable viewer spinner shown on a sign column.
+	Note that the default value will be 1 if CUI Vim is running on
+	Windows. See https://github.com/lambdalisue/fern.vim/issues/256 for
+	detail.
+
 *g:fern#disable_viewer_auto_duplication*
 	Set 1 to disable viewer auto duplication on |WinEnter| autocmd.
 	The duplication is mainly occured when user execute |split| or
@@ -540,6 +546,14 @@ VARIABLE						*fern-variable*
 *g:fern#scheme#file#show_absolute_path_on_root_label*
 	A |Boolean| to show an absolute path of the root node of "file" scheme
 	as a label of the node.
+	Default: 0
+
+*g:fern#disable_auto_buffer_delete*
+	A |Number| value that specifies whether to synchronize file removes to the buffer
+	Default: 0
+
+*g:fern#disable_auto_buffer_rename*
+	A |Number| value that specifies whether to synchronize file renames to the buffer
 	Default: 0
 
 -----------------------------------------------------------------------------
@@ -888,7 +902,7 @@ GLOBAL							*fern-mapping-global*
 
 *<Plug>(fern-action-open:select)*
 	Open a cursor node or marked nodes through "window selector"
-	(|fern-glofern-glossary-window-selector|.)
+	(|fern-glossary-window-selector|.)
 
 *<Plug>(fern-action-open:split)*
 *<Plug>(fern-action-open:vsplit)*
@@ -1027,7 +1041,7 @@ The following mappings/actions are only available on file:// scheme.
 	OS		Requirement~
 	macOS:		osascript (OS builtin)
 	Windows:	PowerShell (OS builtin)
-	Linux:		trash-ci or gomi (Users need to install)
+	Linux:		trash-cli or gomi (Users need to install)
 			https://github.com/andreafrancia/trash-cli
 			https://github.com/b4b4r07/gomi
 	Note that the action fails without removing the files/directories if

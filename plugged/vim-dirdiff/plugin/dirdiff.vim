@@ -272,7 +272,7 @@ function! <SID>DirDiff(srcA, srcB)
     else
         call append(2, "Usage:   <Enter>/'o'=open,'s'=sync,'q'=quit")
     endif
-    call append(3, "Options: 'u'=update,'x'=set excludes,'i'=set ignore,'a'=set args" )
+    call append(3, "Options: 'u'=update,'x'=set excludes,'i'=set ignore,'a'=set args, 'h'=hex mode, 'w'=wrap mode")
     call append(4, "Diff Args:" . cmdarg)
     call append(5, "")
     " go to the beginning of the file
@@ -297,6 +297,8 @@ function! <SID>DirDiff(srcA, srcB)
     nnoremap <buffer> x :call <SID>ChangeExcludes()<CR>
     nnoremap <buffer> a :call <SID>ChangeArguments()<CR>
     nnoremap <buffer> i :call <SID>ChangeIgnore()<CR>
+    nnoremap <buffer> h :call <SID>DirDiffHexmode()<CR>
+    nnoremap <buffer> w :call <SID>DirDiffWrapmode()<CR>
     nnoremap <buffer> q :call <SID>DirDiffQuit()<CR>
 
     nnoremap <buffer> o    :call <SID>DirDiffOpen()<CR>
@@ -377,6 +379,62 @@ function! <SID>SaveDiffWindowsIfModified()
     endif
 endfunction
 
+" Toggle hexmode from http://vim.wikia.com/wiki/Hex
+function <SID>ToggleHex()
+    " hex mode should be considered a read-only operation
+    " save values for modified and read-only for restoration later,
+    " and clear the read-only flag for now
+    let l:modified=&mod
+    let l:oldreadonly=&readonly
+    let &readonly=0
+    let l:oldmodifiable=&modifiable
+    let &modifiable=1
+    if !exists("b:editHex") || !b:editHex
+        " save old options
+        let b:oldft=&ft
+        let b:oldbin=&bin
+        " set new options
+        setlocal binary " make sure it overrides any textwidth, etc.
+        let &ft="xxd"
+        " set status
+        let b:editHex=1
+        " switch to hex editor
+        silent %!xxd
+    else
+        " restore old options
+        let &ft=b:oldft
+        if !b:oldbin
+            setlocal nobinary
+        endif
+        " set status
+        let b:editHex=0
+        " return to normal editing
+        silent %!xxd -r
+    endif
+    " restore values for modified and read only state
+    let &mod=l:modified
+    let &readonly=l:oldreadonly
+    let &modifiable=l:oldmodifiable
+endfunction
+
+function! <SID>DirDiffHexmode()
+    wincmd k
+    call <SID>ToggleHex()
+    wincmd l
+    call <SID>ToggleHex()
+    " Go back to the diff window
+    wincmd j
+endfunction
+
+function! <SID>DirDiffWrapmode()
+    wincmd k
+    setlocal wrap!
+    wincmd l
+    setlocal wrap!
+    " Go back to the diff window
+    wincmd j
+endfunction
+
 function! <SID>EscapeFileName(path)
 	if (v:version >= 702)
 		return fnameescape(a:path)
@@ -451,11 +509,11 @@ function! <SID>DirDiffOpen()
             if s:LastMode == 2
                 silent exec "bd ".bufnr(previousFileA)
 
-                silent exec "drop ".previousFileB
+                call <SID>Drop(previousFileB)
                 silent exec "edit ".fileToOpen
             else
                 let previousFile = (s:LastMode == "A") ? previousFileA : previousFileB
-                silent exec "drop ".previousFile
+                call <SID>Drop(previousFile)
                 silent exec "edit ".fileToOpen
                 silent exec "bd ".bufnr(previousFile)
             endif
@@ -474,18 +532,18 @@ function! <SID>DirDiffOpen()
 
         if exists("s:LastMode")
             if s:LastMode == 2
-                silent exec "drop ".previousFileA
+                call <SID>Drop(previousFileA)
                 silent exec "edit ".s:FilenameA
                 diffthis
                 silent exec "bd ".bufnr(previousFileA)
 
-                silent exec "drop ".previousFileB
+                call <SID>Drop(previousFileB)
                 silent exec "edit ".s:FilenameB
                 diffthis
                 silent exec "bd ".bufnr(previousFileB)
             else
                 let previousFile = (s:LastMode == "A") ? previousFileA : previousFileB
-                silent exec "drop ".previousFile
+                call <SID>Drop(previousFile)
                 silent exec "edit ".s:FilenameB
                 silent exec "bd ".bufnr(previousFile)
                 diffthis
@@ -526,7 +584,7 @@ function! <SID>SaveIfModified(bufNum)
         let fullName = fnamemodify(name, ":p")
         let input = confirm("File " . fullName . " has been modified.", "&Save\nCa&ncel", 1)
         if (input == 1)
-            silent exec "drop ".name
+            cal <SID>Drop(name)
             exec "w! ".name
         endif
     endif
