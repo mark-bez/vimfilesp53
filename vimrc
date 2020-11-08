@@ -219,7 +219,7 @@ map <F7> :setlocal spell!<CR>
 " Toggle relative line numbers and regular line numbers.
 nmap <F8> :set invrelativenumber<CR>
 
-" using plugin instead now - to delete -  Toggle visually showing all whitespace charactersT - to turn off, :set nolist
+" using vim-better-whitespace plugin instead now - to delete -  Toggle visually showing all whitespace charactersT - to turn off, :set nolist
 " noremap <F9> :set list!<CR>
 " inoremap <F9> <C-o>:set list!<CR>
 " cnoremap <F9> <C-c>:set list!<CR>
@@ -341,11 +341,11 @@ map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
 " .............................................................................
-" ntpeters/vim-better-whitespace
+" ntpeters/vim-better-whitespace - set most settings in the plugin file
+" I limited stripping to files with less than 5000 lines
 " .............................................................................
 
-let g:better_whitespace_enabled=1
-let g:better_whitespace_ctermcolor=125
+let g:better_whitespace_guicolor='#0087ff'
 let g:strip_whitespace_on_save=1
 
 " .............................................................................

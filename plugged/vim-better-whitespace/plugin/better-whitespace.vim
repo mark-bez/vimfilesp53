@@ -41,14 +41,14 @@ call s:InitVariable('current_line_whitespace_disabled_hard', 0)
 call s:InitVariable('current_line_whitespace_disabled_soft', 0)
 
 " Set this to enable stripping whitespace on file save
-call s:InitVariable('strip_whitespace_on_save', 0)
+call s:InitVariable('strip_whitespace_on_save', 1)
 
 " Set this to enable stripping white lines at the end of the file when we
 " strip whitespace
-call s:InitVariable('strip_whitelines_at_eof', 0)
+call s:InitVariable('strip_whitelines_at_eof', 1)
 
 " Set this to enable user confirmation before stripping whitespace on file save
-call s:InitVariable('strip_whitespace_confirm', 1)
+call s:InitVariable('strip_whitespace_confirm', 0)
 
 " Set this to blacklist specific filetypes
 call s:InitVariable('better_whitespace_filetypes_blacklist', ['diff', 'gitcommit', 'unite', 'qf', 'help', 'markdown'])
@@ -60,7 +60,7 @@ call s:InitVariable('better_whitespace_skip_empty_lines', 0)
 call s:InitVariable('strip_only_modified_lines', 0)
 
 " Skip stripping whitespace on files that have more lines than this variable
-call s:InitVariable('strip_max_file_size', 1000)
+call s:InitVariable('strip_max_file_size', 5000)
 
 " Disable verbosity by default
 call s:InitVariable('better_whitespace_verbosity', 0)
