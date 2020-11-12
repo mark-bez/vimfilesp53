@@ -123,6 +123,9 @@ Plug 'tpope/vim-git'
 " Font size changer
 Plug 'drmikehenry/vim-fontsize'
 
+" Add spelling errors to the quickfix list (vim-ingo-library is a dependency).
+Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
+
 call plug#end()
 
 " -----------------------------------------------------------------------------
@@ -168,6 +171,10 @@ inoremap jk <esc>
 inoremap kj <esc>
 xnoremap jk <esc>
 xnoremap kj <esc>
+" map the ENTER key to switch back to Normal mode from Insert and Visual
+" Use Caps Lock ENTER (mapped to Ctrl) to add a line return from Insert mode
+inoremap <ENTER> <esc>
+xnoremap <ENTER> <esc>
 
 " Shortcuts for changing the window focus
 map <C-h> <C-w>h
@@ -215,6 +222,12 @@ map <leader>ev :tabnew $MYVIMRC<CR>
 
 " Toggle spell check.
 map <F7> :setlocal spell!<CR>
+
+" Spelling mistakes will also be colored red if you uncomment the colors.
+hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellCap cterm=underline ctermfg=203 guifg=DarkMagenta
 
 " Toggle relative line numbers and regular line numbers.
 nmap <F8> :set invrelativenumber<CR>
