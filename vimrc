@@ -2,8 +2,6 @@ set autoindent                 " copy indent from current line when starting a n
 set autoread                   " autoreload the file in Vim if it has been changed outside of Vim
 set backspace=indent,eol,start " Allows you to backspace to the left of the Insert mode entry character
 set backupdir=/tmp//,.
-" set clipboard=unnamed        " text copied from Vim can be pasted using ctrl-v
-" set clipboard=unnamedplus    " text copied using ctrl-c can be pasted into Vim using p
 set cursorline                 " highlight current line
 set directory=/tmp//,.
 set encoding=utf-8             " set encoding to UTF-8 (default was "latin1")
