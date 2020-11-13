@@ -127,13 +127,8 @@ Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
 call plug#end()
 
 " -----------------------------------------------------------------------------
-" Cursor line
+" Cursor line - see gvimrc for other cursor line settings
 " -----------------------------------------------------------------------------
-
-" Works with set cursorline setting from above
-highlight LineNr guifg=#ffea00 guibg=gray
-highlight CursorLineNr gui=bold guifg=#ffffff guibg=#c0d0e0
-highlight iCursor guifg=white guibg=steelblue
 
 " shows/hides cursor line when switching modes
 :autocmd InsertEnter,InsertLeave * set cul!
@@ -200,6 +195,10 @@ inoremap <A-k> <esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
+" splits a line in Normal mode
+:nnoremap m i<CR><Esc>
+
+
 "Press * to search for the term under the cursor or a visual selection and then press a key below to replace all instances of it in the current file.
 nnoremap <F2> :%s///g<Left><Left>
 nnoremap <F3> :%s///gc<Left><Left><Left>
@@ -225,7 +224,7 @@ map <F7> :setlocal spell!<CR>
 hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
 hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
 hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
-hi SpellCap cterm=underline ctermfg=203 guifg=DarkMagenta
+" hi SpellCap cterm=underline ctermfg=203 guifg=DarkMagenta
 
 " Toggle relative line numbers and regular line numbers.
 nmap <F8> :set invrelativenumber<CR>
