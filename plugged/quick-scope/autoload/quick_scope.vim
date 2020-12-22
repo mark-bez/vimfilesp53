@@ -34,6 +34,30 @@ function! quick_scope#HighlightLine(direction, targets) abort
   endif
 endfunction
 
+function! quick_scope#HighlightLineDelayCallback(direction, targets, _id) abort
+  call quick_scope#UnhighlightLine()
+  call quick_scope#HighlightLine(a:direction, a:targets)
+endfunction
+
+let s:timer = -1
+
+function! quick_scope#HighlightLineDelay(direction, targets) abort
+  if g:qs_enable && g:qs_delay > 0
+    call timer_stop(s:timer)
+    let Cb = function('quick_scope#HighlightLineDelayCallback', [a:direction, a:targets])
+    let s:timer = timer_start(g:qs_delay, Cb)
+  else
+    call quick_scope#UnhighlightLine()
+    call quick_scope#HighlightLine(a:direction, a:targets)
+  endif
+endfunction
+
+function! quick_scope#StopTimer() abort
+  if g:qs_delay > 0
+    call timer_stop(s:timer)
+  endif
+endfunction
+
 function! quick_scope#UnhighlightLine() abort
   for m in filter(getmatches(), printf('v:val.group ==# "%s" || v:val.group ==# "%s"', g:qs_hi_group_primary, g:qs_hi_group_secondary))
     call matchdelete(m.id)
@@ -274,7 +298,7 @@ function! s:get_highlight_patterns(line, cursor, end, targets) abort
       let [char_p, char_s] = ['', '']
 
       let is_first_word = 0
-    elseif (index(a:targets, char) != -1 && !g:qs_ignorecase) || index(a:targets, tolower(char)) != -1
+    elseif index(a:targets, g:qs_ignorecase ? tolower(char) : char) != -1
       if g:qs_ignorecase
         " When g:qs_ignorecase is set, make char_i the lowercase of char
         let char_i = tolower(char)

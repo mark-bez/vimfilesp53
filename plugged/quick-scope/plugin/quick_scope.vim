@@ -57,15 +57,19 @@ if !exists('g:qs_buftype_blacklist')
   let g:qs_buftype_blacklist = []
 endif
 
+if !exists('g:qs_delay')
+  let g:qs_delay = has('timers') ? 50 : 0
+endif
+
 if !exists('g:qs_highlight_on_keys')
   " Vanilla mode. Highlight on cursor movement.
   augroup quick_scope
     if g:qs_lazy_highlight
       autocmd CursorHold,InsertLeave,ColorScheme,WinEnter,BufEnter,FocusGained * call quick_scope#UnhighlightLine() | call quick_scope#HighlightLine(2, g:qs_accepted_chars)
     else
-      autocmd CursorMoved,InsertLeave,ColorScheme,WinEnter,BufEnter,FocusGained * call quick_scope#UnhighlightLine() | call quick_scope#HighlightLine(2, g:qs_accepted_chars)
+      autocmd CursorMoved,InsertLeave,ColorScheme,WinEnter,BufEnter,FocusGained * call quick_scope#HighlightLineDelay(2, g:qs_accepted_chars)
     endif
-    autocmd InsertEnter,BufLeave,TabLeave,WinLeave,FocusLost * call quick_scope#UnhighlightLine()
+    autocmd InsertEnter,BufLeave,TabLeave,WinLeave,FocusLost * call quick_scope#StopTimer() | call quick_scope#UnhighlightLine()
   augroup END
 else
   " Highlight on key press. Set an 'augmented' mapping for each defined key.
@@ -87,7 +91,7 @@ xnoremap <silent> <plug>(QuickScopeToggle) :<c-u>call quick_scope#Toggle()<cr>
 " Set the colors used for highlighting.
 function! s:set_highlight_colors()
   " Priority for overruling other highlight matches.
-  let g:qs_hi_priority = 1
+  let g:qs_hi_priority = get(g:, "qs_hi_priority", 1)
 
   " Highlight group marking first appearance of characters in a line.
   let g:qs_hi_group_primary = 'QuickScopePrimary'

@@ -1,8 +1,7 @@
 set autoindent                 " copy indent from current line when starting a new line
-set autoread                   " autoreload the file in Vim if it has been changed outside of Vim
 set backspace=indent,eol,start " Allows you to backspace to the left of the Insert mode entry character
 set backupdir=/tmp//,.
-set cursorline                 " highlight current line
+set cursorline                 " highlight current line - this may slow down performance
 set directory=/tmp//,.
 set encoding=utf-8             " set encoding to UTF-8 (default was "latin1")
 set expandtab smarttab         " convert <TAB> key-presses to spaces
@@ -26,7 +25,7 @@ set ruler                      " show line and column number of the cursor on ri
 set scrolloff=3                " keep three lines between the cursor and the edge of the screen
 set shiftwidth=2               " number of spaces to use for each step of (auto)indent
 set showcmd
-set showmatch                  " highlight matching parentheses / brackets [{()}]
+set noshowmatch                  "turn off highlight matching parentheses / brackets [{()}]
 set showmode
 set smartcase
 set smartindent                " even better autoindent (e.g. add indent after '{')
@@ -55,6 +54,9 @@ cd $HOME/Documents
 " Specify a directory for plugins
 call plug#begin()
 
+" Startup screen
+Plug 'mhinz/vim-startify'
+
 " Navigate and manipulate files in a tree view.
 Plug 'lambdalisue/fern.vim'
 
@@ -67,36 +69,17 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight which character to jump to when using horizontal movement keys.
 Plug 'unblevable/quick-scope'
 
-" A git wrapper.
-Plug 'tpope/vim-fugitive'
-
-" Ripgrep project search wrapper
-Plug 'mileszs/ack.vim'
-
-" Status line
-Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " Show git file changes in the gutter.
 Plug 'mhinz/vim-signify'
-
-"Plug 'airblade/vim-gitgutter'
-
-" Better display unwanted whitespace.
-Plug 'ntpeters/vim-better-whitespace'
 
 " Asciidoctor plugins
 Plug 'habamax/vim-asciidoctor'
 
 " Automatically clear search highlights after you move your cursor.
 Plug 'haya14busa/incsearch.vim'
-
-" Adds file tree icons
-Plug 'ryanoasis/vim-devicons'
-
-Plug 'othree/xml.vim'
-
-" bufkill
-" Plug 'qpkorr/vim-bufkill'
 
 " Integrate fzf with Vim.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -114,15 +97,8 @@ Plug 'prettier/vim-prettier', {
 
 call plug#end()
 
-" Languages and file types.
-Plug 'othree/html5.vim'
-Plug 'tpope/vim-git'
-
 " Font size changer
 Plug 'drmikehenry/vim-fontsize'
-
-" Add spelling errors to the quickfix list (vim-ingo-library is a dependency).
-Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
 
 call plug#end()
 
@@ -166,8 +142,8 @@ xnoremap jk <esc>
 xnoremap kj <esc>
 " map the ENTER key to switch back to Normal mode from Insert and Visual
 " Use Caps Lock ENTER (mapped to Ctrl) to add a line return from Insert mode
-inoremap <ENTER> <esc>
-xnoremap <ENTER> <esc>
+" inoremap <ENTER> <esc>
+" xnoremap <ENTER> <esc>
 
 " Shortcuts for changing the window focus
 map <C-h> <C-w>h
@@ -175,17 +151,15 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-" open a new vertical split and switch over to it
-nnoremap <leader>w <C-w>v<C-w>l
-
 " move among buffers
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> [B :blast<CR>
 
-" splits the line on a character in Normal mode when pressing m
-nmap m i<C-m><esc>
+" splits the line on a character in Normal mode when pressing m- can't use m
+" because it is used by marks - changed to b for break
+nnoremap b i<CR><esc>
 
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
@@ -195,8 +169,6 @@ inoremap <A-k> <esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
-" splits a line in Normal mode
-:nnoremap m i<CR><Esc>
 
 
 "Press * to search for the term under the cursor or a visual selection and then press a key below to replace all instances of it in the current file.
@@ -216,6 +188,9 @@ let g:mapleader = " "
 " open _vimrc file with ,ev (leader edit vim)
 "nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 map <leader>ev :tabnew $MYVIMRC<CR>
+
+" open a new vertical split and switch over to it
+nnoremap <leader>w <C-w>v<C-w>l
 
 " Toggle spell check.
 map <F7> :setlocal spell!<CR>
@@ -273,6 +248,31 @@ winpos 1020 50
 winsize 130 70
 
 " -----------------------------------------------------------------------------
+" Startify settings
+" -----------------------------------------------------------------------------
+
+let g:startify_custom_header = [
+    \ 'WELCOME TO VIM'
+    \ ]
+
+let g:startify_session_dir = '~/.vim/session'
+
+let g:startify_bookmarks = [ 'C:\Users\echo\Documents\notes', 'C:\Users\echo\Documents\websites\tek-write-jekyll\site' ]
+
+let g:startify_lists = [
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks:']      },
+      \ { 'type': 'files',     'header': ['   Recent Files:']            },
+      \ { 'type': 'dir',       'header': ['   Files in Current Directory sorted by save time: '. getcwd()] },
+      \ { 'type': 'sessions',  'header': ['   Sessions:']       },
+      \ { 'type': 'commands',  'header': ['   Commands:']       },
+      \ ]
+
+let g:airline_theme='solarized'
+let g:airline_powerline_fonts = 1
+let g:airline_detect_modified=1
+
+
+" -----------------------------------------------------------------------------
 " Insert date and time
 " -----------------------------------------------------------------------------
 
@@ -305,15 +305,6 @@ command! TidyXML !tidy -mi -xml -wrap 0 %
 " -----------------------------------------------------------------------------
 " Plugin settings, mappings and autocommands
 " -----------------------------------------------------------------------------
-
-" .............................................................................
-" Git Fugitive plugin mappings
-" .............................................................................
-
-nmap <leader>gs :G<CR>
-nmap <leader>gh :diffget //3<CR>
-nmap <leader>gl :diffget //2<CR>
-nnoremap <leader>gc :GCheckout<CR>
 
 " .............................................................................
 " FZF plugin mappings
@@ -349,14 +340,6 @@ map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
-
-" .............................................................................
-" ntpeters/vim-better-whitespace - set most settings in the plugin file
-" I limited stripping to files with less than 5000 lines
-" .............................................................................
-
-let g:better_whitespace_guicolor='#0087ff'
-let g:strip_whitespace_on_save=1
 
 " .............................................................................
 " unblevable/quick-scope
@@ -502,30 +485,6 @@ augroup FernGroup
   autocmd!
   autocmd FileType fern call FernInit()
 augroup END
-
-" .............................................................................
-" Plug 'mileszs/ack.vim' plugin settings
-" .............................................................................
-
-" Use ripgrep for searching
-
-" --vimgrep -> Needed to parse the rg response properly for ack.vim
-" --type-not sql -> Avoid huge sql file dumps as it slows down the search
-
-" --smart-case -> Search case insensitive if all lowercase pattern, Search case sensitively otherwise
-let g:ackprg = 'rg --vimgrep --type-not sql --smart-case'
-
-" Auto close the Quickfix list after pressing '<enter>' on a list item
-let g:ack_autoclose = 1
-
-" Any empty ack search will search for the work the cursor is on
-let g:ack_use_cword_for_empty_search = 1
-
-" Don't jump to first match
-cnoreabbrev Ack Ack!
-
-" Maps <leader>/ so we're ready to type the search keyword
-nnoremap <Leader>/ :Ack!<Space>
 
 
 " -----------------------------------------------------------------------------

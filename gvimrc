@@ -1,5 +1,5 @@
 colorscheme solarized8_high
-set background=light
+set background=dark
 
 " set guioptions-=T " Removes top toolbar
 set guioptions=rb " sets the right and bottom scrollbars and hides the menubar due to a missimg m

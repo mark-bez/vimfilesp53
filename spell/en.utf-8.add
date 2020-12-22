@@ -256,3 +256,6 @@ Pandoc
 docx
 stylesheets
 DOCX
+DOCTYPE
+pandoc
+bulleted
