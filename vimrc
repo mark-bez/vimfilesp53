@@ -1,6 +1,8 @@
 set autoindent                 " copy indent from current line when starting a new line
+set autoread                   "autoreload the file if is has been changed outside Vim
 set backspace=indent,eol,start " Allows you to backspace to the left of the Insert mode entry character
 set backupdir=/tmp//,.
+set cmdheight=2                " give more space for displaying messages
 set cursorline                 " highlight current line - this may slow down performance
 set directory=/tmp//,.
 set encoding=utf-8             " set encoding to UTF-8 (default was "latin1")
@@ -35,7 +37,7 @@ set splitright
 set tabstop=2                  " width that a <TAB> character displays as
 set textwidth=0
 set timeoutlen=500
-set updatetime=200             " for vim-signify async updating
+set updatetime=300             " default is 4 s which can cause delays
 set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
 set undodir=~/.vim/undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
@@ -50,6 +52,9 @@ cd $HOME/Documents
 " -----------------------------------------------------------------------------
 " Plugins
 " -----------------------------------------------------------------------------
+
+" Alternative: use the following to also enable language-dependent indenting.
+filetype plugin indent on
 
 " Specify a directory for plugins
 call plug#begin()
@@ -94,8 +99,6 @@ Plug 'w0rp/ale'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
-
-call plug#end()
 
 " Font size changer
 Plug 'drmikehenry/vim-fontsize'
@@ -157,10 +160,6 @@ nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> [B :blast<CR>
 
-" splits the line on a character in Normal mode when pressing m- can't use m
-" because it is used by marks - changed to b for break
-nnoremap b i<CR><esc>
-
 " Remapping of alt-j, alt-k to move lines up and down
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
@@ -168,8 +167,6 @@ inoremap <A-j> <esc>:m .+1<CR>==gi
 inoremap <A-k> <esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
-
-
 
 "Press * to search for the term under the cursor or a visual selection and then press a key below to replace all instances of it in the current file.
 nnoremap <F2> :%s///g<Left><Left>
@@ -184,6 +181,15 @@ set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ 
 " set the mapleader
 let mapleader = " "
 let g:mapleader = " "
+
+" Add an asciidoc bullet from normal mode
+nmap <leader>b a<CR>* 
+
+" Add an asciidoc checkbox from normal mode
+nmap <leader>bb a<CR>* [ ] 
+
+" splits the line on a character in Normal mode when pressing s
+nnoremap <leader>s i<CR><ESC>
 
 " open _vimrc file with ,ev (leader edit vim)
 "nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
@@ -267,10 +273,13 @@ let g:startify_lists = [
       \ { 'type': 'commands',  'header': ['   Commands:']       },
       \ ]
 
+" -----------------------------------------------------------------------------
+" Airline settings
+" -----------------------------------------------------------------------------
+"
 let g:airline_theme='solarized'
 let g:airline_powerline_fonts = 1
 let g:airline_detect_modified=1
-
 
 " -----------------------------------------------------------------------------
 " Insert date and time
@@ -486,8 +495,6 @@ augroup FernGroup
   autocmd FileType fern call FernInit()
 augroup END
 
-
-" -----------------------------------------------------------------------------
 " Quickfix list
 " -----------------------------------------------------------------------------
 
@@ -524,3 +531,7 @@ map <C-p> "+p
 
 " use ctrl-x in normal and visual modes of Vim to cut and store in the Windows clipboard
 map <C-x> "+x
+
+" map new checkbox for asciidoc
+nnoremap <leader>cb * [ ] 
+nnoremap <leader>ncb \n * [ ] 

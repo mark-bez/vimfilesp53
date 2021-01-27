@@ -35,7 +35,7 @@ function! fern#internal#buffer#open(bufname, ...) abort
   endif
   if options.opener =~# s:edit_or_opener_pattern
     let opener2 = matchstr(options.opener, s:edit_or_opener_pattern)
-    let options.opener = &modified ? opener2 : options.opener
+    let options.opener = &modified ? opener2 : 'edit'
   endif
   if options.keepalt && options.opener ==# 'edit'
     let options.mods .= ' keepalt'
@@ -43,11 +43,15 @@ function! fern#internal#buffer#open(bufname, ...) abort
   if options.keepjumps && options.opener ==# 'edit'
     let options.mods .= ' keepjumps'
   endif
+  " Use user frindly path on a real path to fix #284
+  let bufname = filereadable(a:bufname)
+        \ ? fnamemodify(a:bufname, ':~:.')
+        \ : a:bufname
   let args = [
         \ options.mods,
         \ options.cmdarg,
         \ options.opener,
-        \ fnameescape(a:bufname),
+        \ fnameescape(bufname),
         \]
   let cmdline = join(filter(args, { -> !empty(v:val) }), ' ')
   call fern#logger#debug('fern#internal#buffer#open', 'cmdline', cmdline)
