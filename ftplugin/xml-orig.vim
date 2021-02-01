@@ -41,7 +41,7 @@ setlocal commentstring=<!--%s-->
 "   gets confused for example by
 "       <!ENTITY gt ">">
 if exists("loaded_matchit")
-"    let b:match_ignorecase=0
+    let b:match_ignorecase=0
     let b:match_words =
      \  '<:>,' .
      \  '<\@<=!\[CDATA\[:]]>,'.

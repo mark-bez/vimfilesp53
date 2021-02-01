@@ -53,8 +53,6 @@ cd $HOME/Documents
 " Plugins
 " -----------------------------------------------------------------------------
 
-" Alternative: use the following to also enable language-dependent indenting.
-filetype plugin indent on
 
 " Specify a directory for plugins
 call plug#begin()
@@ -98,10 +96,12 @@ Plug 'w0rp/ale'
 " Prettifying code files
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html', 'xml'] }
 
 " Font size changer
 Plug 'drmikehenry/vim-fontsize'
+
+Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
 
 call plug#end()
 
@@ -113,10 +113,12 @@ call plug#end()
 :autocmd InsertEnter,InsertLeave * set cul!
 
 " -----------------------------------------------------------------------------
-" Syntax highlighting
+" Syntax highlighting and indenting
 " -----------------------------------------------------------------------------
 
 syntax enable
+
+" Detect filetypes and run language-specific plugins in the ftplugin folder
 filetype plugin indent on
 
 " -----------------------------------------------------------------------------
@@ -198,6 +200,9 @@ map <leader>ev :tabnew $MYVIMRC<CR>
 " open a new vertical split and switch over to it
 nnoremap <leader>w <C-w>v<C-w>l
 
+" Open a new empty tab
+nnoremap <leader>a :tabnew<CR>
+
 " Toggle spell check.
 map <F7> :setlocal spell!<CR>
 
@@ -207,8 +212,11 @@ hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
 hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
 " hi SpellCap cterm=underline ctermfg=203 guifg=DarkMagenta
 
-" Toggle relative line numbers and regular line numbers.
+" Use F8 to toggle relative line numbers and regular line numbers.
 nmap <F8> :set invrelativenumber<CR>
+
+" Use F4 to remove trailing whitespace without removing empty lines
+:nnoremap <silent> <F4> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 " using vim-better-whitespace plugin instead now - to delete -  Toggle visually showing all whitespace charactersT - to turn off, :set nolist
 " noremap <F9> :set list!<CR>
@@ -310,6 +318,7 @@ let g:airline_detect_modified=1
 " pretty print for use with HTML Tidy
 command! TidyHTML !tidy -mi -html -wrap 0 %
 command! TidyXML !tidy -mi -xml -wrap 0 %
+command! XmlLint %!xmllint % --format
 
 " -----------------------------------------------------------------------------
 " Plugin settings, mappings and autocommands
@@ -436,7 +445,7 @@ let g:ale_linters = {
  \   'javascript': ['eslint'],
  \}
 
-let g:CSSLint_FileTypeList = ['css', 'less', 'sess'] " Activates csslint for use in Vim with css files
+let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files
 
 " .............................................................................
 " lambdalisue/fern.vim plugin settings
@@ -531,7 +540,3 @@ map <C-p> "+p
 
 " use ctrl-x in normal and visual modes of Vim to cut and store in the Windows clipboard
 map <C-x> "+x
-
-" map new checkbox for asciidoc
-nnoremap <leader>cb * [ ] 
-nnoremap <leader>ncb \n * [ ] 

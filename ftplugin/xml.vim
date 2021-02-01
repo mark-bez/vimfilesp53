@@ -41,7 +41,7 @@ setlocal commentstring=<!--%s-->
 "   gets confused for example by
 "       <!ENTITY gt ">">
 if exists("loaded_matchit")
-"    let b:match_ignorecase=0
+    let b:match_ignorecase=0
     let b:match_words =
      \  '<:>,' .
      \  '<\@<=!\[CDATA\[:]]>,'.
@@ -50,6 +50,12 @@ if exists("loaded_matchit")
      \  '<\@<=\([^ \t>/]\+\)\%(\s\+[^>]*\%([^/]>\|$\)\|>\|$\):<\@<=/\1>,'.
      \  '<\@<=\%([^ \t>/]\+\)\%(\s\+[^/>]*\|$\):/>'
 endif
+
+
+
+
+
+
 
 " Script rgular expresion used. Documents those nasty criters      {{{1
 let s:NoSlashBeforeGt = '\(\/\)\@\<!>'
@@ -80,6 +86,9 @@ en
 
 let b:undo_ftplugin = "setlocal cms< isk<"
   \ . "| unlet b:match_ignorecase b:match_words"
+
+
+
 
 
 
