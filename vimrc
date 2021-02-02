@@ -32,6 +32,7 @@ set showmode
 set smartcase
 set smartindent                " even better autoindent (e.g. add indent after '{')
 set spelllang=en_us
+set spellfile=C:/Users/echo/vimfiles/spell/en.utf-8.add
 set splitbelow
 set splitright
 set tabstop=2                  " width that a <TAB> character displays as
@@ -39,7 +40,7 @@ set textwidth=0
 set timeoutlen=500
 set updatetime=300             " default is 4 s which can cause delays
 set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
-set undodir=~/.vim/undodir     " Saves undo steps to a file so you can redo even after exiting Vim
+set undodir=C:/Users/echo/vimfiles/undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
 set wildmenu                   " visual autocomplete for command menu
 
@@ -103,6 +104,9 @@ Plug 'drmikehenry/vim-fontsize'
 
 Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
 
+" Displays CSS code colors
+Plug 'ap/vim-css-color'
+
 call plug#end()
 
 " -----------------------------------------------------------------------------
@@ -124,6 +128,10 @@ filetype plugin indent on
 " -----------------------------------------------------------------------------
 " Basic mappings
 " -----------------------------------------------------------------------------
+
+" set the mapleader
+let mapleader = " "
+let g:mapleader = " "
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.
@@ -180,9 +188,6 @@ vnoremap <tab> %
 
 set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
-" set the mapleader
-let mapleader = " "
-let g:mapleader = " "
 
 " Add an asciidoc bullet from normal mode
 nmap <leader>b a<CR>* 
@@ -202,6 +207,10 @@ nnoremap <leader>w <C-w>v<C-w>l
 
 " Open a new empty tab
 nnoremap <leader>a :tabnew<CR>
+
+" -----------------------------------------------------------------------------
+" Spell checking
+" -----------------------------------------------------------------------------
 
 " Toggle spell check.
 map <F7> :setlocal spell!<CR>
@@ -266,10 +275,10 @@ winsize 130 70
 " -----------------------------------------------------------------------------
 
 let g:startify_custom_header = [
-    \ 'WELCOME TO VIM'
+    \ ' WELCOME TO VIM'
     \ ]
 
-let g:startify_session_dir = '~/.vim/session'
+let g:startify_session_dir = 'C:\Users\echo\vimfiles\sessions'
 
 let g:startify_bookmarks = [ 'C:\Users\echo\Documents\notes', 'C:\Users\echo\Documents\websites\tek-write-jekyll\site' ]
 
@@ -519,15 +528,6 @@ nnoremap <silent> ]q :cnext<CR>
 inoremap ><Tab> ><Esc>F<lyt>o</<C-r>"><Esc>O<Space>
 
 " -----------------------------------------------------------------------------
-" Set current directory on the fly
-" -----------------------------------------------------------------------------
-
-" This setting must be at toward the bottom for it to work.
-" It maps cd to change the working directory to the directory of active file
-" nnoremap <leader>cd :cd %:p:h<CR>
-nnoremap <leader>cd :lcd %:h<CR>
-
-" -----------------------------------------------------------------------------
 " Enable use of standard Windows copy and paste commands
 " -----------------------------------------------------------------------------
 
@@ -540,3 +540,13 @@ map <C-p> "+p
 
 " use ctrl-x in normal and visual modes of Vim to cut and store in the Windows clipboard
 map <C-x> "+x
+
+" -----------------------------------------------------------------------------
+" Set current directory on the fly
+" -----------------------------------------------------------------------------
+
+" This setting must be at toward the bottom for it to work.
+" It maps cd to change the working directory to the directory of active file
+" nnoremap <leader>cd :cd %:p:h<CR>
+nnoremap <leader>cd :lcd %:h<CR>
+
