@@ -4,6 +4,7 @@ set backspace=indent,eol,start " Allows you to backspace to the left of the Inse
 set backupdir=/tmp//,.
 set cmdheight=2                " give more space for displaying messages
 set cursorline                 " highlight current line - this may slow down performance
+set cpo-=J                     " sets the definition of a sentence to be one space after the period - for two spaces use set cpo+=J
 set directory=/tmp//,.
 set encoding=utf-8             " set encoding to UTF-8 (default was "latin1")
 set expandtab smarttab         " convert <TAB> key-presses to spaces
@@ -13,14 +14,17 @@ set hlsearch                   " highlight search matches
 set incsearch                  " search as characters are entered, which is incremental search
 set laststatus=2               " always show statusline (even with only single window)
 set lazyredraw                 " redraw screen only when we need to
+set listchars=tab:Δ\ ,eol:¬
 set matchpairs+=<:>            " Use % to jump between pairs
 set number                     " show line numbers
 set mouse=a                    " enable mouse support (might not work well on Mac OS X)
 set nobackup
 set nocompatible               " This should be set by default in Vim8, but just in case
+set nocp
 set nostartofline
 set noswapfile
 set nowrap                     " do not wrap lines
+set numberwidth=6              " sets the gutter width
 set regexpengine=1
 set relativenumber             " set relative line numbers
 set ruler                      " show line and column number of the cursor on right side of statusline
@@ -32,7 +36,7 @@ set showmode
 set smartcase
 set smartindent                " even better autoindent (e.g. add indent after '{')
 set spelllang=en_us
-set spellfile=C:/Users/echo/vimfiles/spell/en.utf-8.add
+set spellfile=C:\Users\echo\vimfiles\spell\en.utf-8.add
 set splitbelow
 set splitright
 set tabstop=2                  " width that a <TAB> character displays as
@@ -40,20 +44,21 @@ set textwidth=0
 set timeoutlen=500
 set updatetime=300             " default is 4 s which can cause delays
 set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
-set undodir=C:/Users/echo/vimfiles/undodir     " Saves undo steps to a file so you can redo even after exiting Vim
+set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
+set undodir=C:\Users\echo\vimfiles\undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
 set wildmenu                   " visual autocomplete for command menu
+set wildmode=list:longest,full
 
 " -----------------------------------------------------------------------------
 " Set current directory on startup
 " -----------------------------------------------------------------------------
 
-cd $HOME/Documents
+cd $HOME\Documents
 
 " -----------------------------------------------------------------------------
 " Plugins
 " -----------------------------------------------------------------------------
-
 
 " Specify a directory for plugins
 call plug#begin()
@@ -73,7 +78,7 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight which character to jump to when using horizontal movement keys.
 Plug 'unblevable/quick-scope'
 
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Show git file changes in the gutter.
@@ -102,10 +107,23 @@ Plug 'prettier/vim-prettier', {
 " Font size changer
 Plug 'drmikehenry/vim-fontsize'
 
+" Spelling checker enhancer
 Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
 
 " Displays CSS code colors
 Plug 'ap/vim-css-color'
+
+" vim-sneak
+Plug 'justinmk/vim-sneak'
+
+" subtle-colo colorscheme
+Plug 'kadekillary/subtle_solo'
+
+" syntastic syntax checker for XML, HTML, asciidoc, Markdown and more
+Plug 'vim-syntastic/syntastic'
+
+" Git tool
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
@@ -188,6 +206,8 @@ vnoremap <tab> %
 
 set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
+" enter insert mode after moving to the end of a word in Normal mode
+map e ea
 
 " Add an asciidoc bullet from normal mode
 nmap <leader>b a<CR>* 
@@ -226,11 +246,6 @@ nmap <F8> :set invrelativenumber<CR>
 
 " Use F4 to remove trailing whitespace without removing empty lines
 :nnoremap <silent> <F4> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
-
-" using vim-better-whitespace plugin instead now - to delete -  Toggle visually showing all whitespace charactersT - to turn off, :set nolist
-" noremap <F9> :set list!<CR>
-" inoremap <F9> <C-o>:set list!<CR>
-" cnoremap <F9> <C-c>:set list!<CR>
 
 " Toggle quickfix window.
 function! QuickFix_toggle()
@@ -294,9 +309,9 @@ let g:startify_lists = [
 " Airline settings
 " -----------------------------------------------------------------------------
 "
-let g:airline_theme='solarized'
-let g:airline_powerline_fonts = 1
-let g:airline_detect_modified=1
+" let g:airline_theme='solarized'
+" let g:airline_powerline_fonts = 1
+" let g:airline_detect_modified=1
 
 " -----------------------------------------------------------------------------
 " Insert date and time
@@ -327,7 +342,7 @@ let g:airline_detect_modified=1
 " pretty print for use with HTML Tidy
 command! TidyHTML !tidy -mi -html -wrap 0 %
 command! TidyXML !tidy -mi -xml -wrap 0 %
-command! XmlLint %!xmllint % --format
+command! XMLlint %!xmllint % --format
 
 " -----------------------------------------------------------------------------
 " Plugin settings, mappings and autocommands
@@ -430,6 +445,28 @@ augroup asciidoctor
     au BufEnter *.adoc,*.asciidoc call AsciidoctorMappings()
 augroup END
 
+
+" .............................................................................
+" Syntastic plugin settings
+" .............................................................................
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_asciidoc_checkers = ['asciidoc']
+let g:syntastic_asciidoc_asciidoc_exec = "asciidoctor"
+let g:syntastic_xml_checkers = ['xmllint']
+let g:syntastic_html_checkers = ['tidy']
+let g:syntastic_css_checkers = ['stylelint']
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] } " starts up with Syntastic turned off. Use F9 to toggle it on and off. It interferes with fzf so must be off when using fzf.
+silent! nmap <F9> :SyntasticToggleMode<CR>
+
 " .............................................................................
 " ALE plugin settings
 " .............................................................................
@@ -439,22 +476,36 @@ let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.
 " See https://medium.com/@jimeno0/eslint-and-prettier-in-vim-neovim-7e45f85cf8f9
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
-\   'css': ['stylelint'],
+\   'css': ['stylelint', 'prettier'],
+\   'xml': ['xmllint'],
 \}
 
 let g:ale_sign_error = 'x'
 let g:ale_sign_warning = '!'
 
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0       " Use 1 to activate - run :ALEFix instead if you want to manually fix a file
 let g:ale_linters_explicit = 1
+let g:ale_lint_on_text_changed = 'never'   " Only activate on save
+let g:ale_lint_on_enter = 1    " start when GVim starts = 1. to turn it off use 0
 
 let g:ale_linters = {
- \   'css': ['stylelint'],
+ \   'css': ['stylelint', 'prettier'],
  \   'html': ['tidy'],
  \   'javascript': ['eslint'],
+ \   'xml': ['xmllint'],
  \}
 
 let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files
+
+let g:ale_sign_error = '⚠️' "Less aggressive than the default '>>'
+let g:ale_sign_warning = '💡'
+"let g:ale_echo_msg_warning_str = 'Warning 📣'
+"let g:ale_echo_msg_error_str = '❧ Error'
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
+
+" Bind F12 to fixing problems with ALE
+nmap <F12> <Plug>(ale_fix)
 
 " .............................................................................
 " lambdalisue/fern.vim plugin settings
@@ -512,6 +563,22 @@ augroup FernGroup
   autocmd!
   autocmd FileType fern call FernInit()
 augroup END
+
+
+" Indent line for subtle light colorscheme
+" -----------------------------------------------------------------------------
+" << INDENT LINE >> {{{
+let g:indentLine_char = '¦'
+
+" Choose one or the other
+
+" subtle light
+let g:indentLine_color_gui = "#eee8d5"
+
+" subtle dark
+let g:indentLine_color_gui = "#073642"
+" }}}
+
 
 " Quickfix list
 " -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
-colorscheme solarized8_high
-set background=dark
+colorscheme subtle_light
+set background=light
 
 " set guioptions-=T " Removes top toolbar
 set guioptions=rb " sets the right and bottom scrollbars and hides the menubar due to a missimg m
@@ -25,7 +25,8 @@ set guicursor=n-v-c:block-Cursor-blinkwait3000
 set guicursor=i:ver30-iCursor-blinkwait3000
 
 " set guifont=Monoid:h13:cANSI:qDRAFT
-set guifont=Roboto_Mono:h13:W300
+set guifont=Roboto_Mono:h14:W300
+" set guifont=Input_Mono:h14:W300
 set encoding=utf-8
 
 " I used the following line with my markai colorscheme - however if I want to

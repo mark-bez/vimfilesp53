@@ -1,0 +1,116 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~\Documents
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+argglobal
+%argdel
+edit notes\using-vim.adoc
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+wincmd _ | wincmd |
+vsplit
+2wincmd h
+wincmd w
+wincmd w
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 109 + 163) / 326)
+exe 'vert 2resize ' . ((&columns * 66 + 163) / 326)
+exe 'vert 3resize ' . ((&columns * 149 + 163) / 326)
+argglobal
+setlocal fdm=expr
+setlocal fde=AsciidoctorFold()
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+5
+normal! zo
+344
+normal! zo
+let s:l = 349 - ((348 * winheight(0) + 24) / 48)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+349
+normal! 0
+lcd ~\Documents\notes
+wincmd w
+argglobal
+if bufexists("~\Documents\notes\test.html") | buffer ~\Documents\notes\test.html | else | edit ~\Documents\notes\test.html | endif
+balt ~\Documents\notes\example.xml
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 24) / 48)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+lcd ~\Documents\notes
+wincmd w
+argglobal
+if bufexists("~\Documents\notes\dita-task-example.xml") | buffer ~\Documents\notes\dita-task-example.xml | else | edit ~\Documents\notes\dita-task-example.xml | endif
+balt ~\Documents\notes\test4.xml
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 31 - ((30 * winheight(0) + 24) / 48)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+31
+normal! 07|
+lcd ~\Documents\notes
+wincmd w
+3wincmd w
+exe 'vert 1resize ' . ((&columns * 109 + 163) / 326)
+exe 'vert 2resize ' . ((&columns * 66 + 163) / 326)
+exe 'vert 3resize ' . ((&columns * 149 + 163) / 326)
+tabnext 1
+badd +15 ~\Documents\notes\using-vim.adoc
+badd +1 ~\Documents\notes\example.xml
+badd +1 ~\Documents\notes\test.html
+badd +13 ~\Documents\notes\test4.xml
+badd +0 ~\Documents\notes\dita-task-example.xml
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToOSI
+set winminheight=1 winminwidth=1
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

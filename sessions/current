@@ -1,0 +1,163 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~\Documents
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+argglobal
+%argdel
+$argadd \Users\echo\vimfiles\gvimrc
+edit notes\test.xml
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+wincmd _ | wincmd |
+vsplit
+2wincmd h
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
+wincmd w
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 98 + 148) / 296)
+exe '2resize ' . ((&lines * 26 + 35) / 70)
+exe 'vert 2resize ' . ((&columns * 98 + 148) / 296)
+exe '3resize ' . ((&lines * 40 + 35) / 70)
+exe 'vert 3resize ' . ((&columns * 98 + 148) / 296)
+exe 'vert 4resize ' . ((&columns * 98 + 148) / 296)
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 20 - ((19 * winheight(0) + 33) / 67)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+20
+normal! 045|
+lcd ~\Documents\notes
+wincmd w
+argglobal
+if bufexists("~\Documents\notes\tasks.adoc") | buffer ~\Documents\notes\tasks.adoc | else | edit ~\Documents\notes\tasks.adoc | endif
+balt ~\Documents\notes\bike-ride-prep-list.adoc
+setlocal fdm=expr
+setlocal fde=AsciidoctorFold()
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+52
+normal! zo
+57
+normal! zo
+let s:l = 73 - ((3 * winheight(0) + 13) / 26)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+73
+normal! 037|
+lcd ~\Documents\notes
+wincmd w
+argglobal
+if bufexists("~\Documents\notes\bike-ride-prep-list.adoc") | buffer ~\Documents\notes\bike-ride-prep-list.adoc | else | edit ~\Documents\notes\bike-ride-prep-list.adoc | endif
+balt ~\Documents\notes\tasks.adoc
+setlocal fdm=expr
+setlocal fde=AsciidoctorFold()
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+1
+normal! zo
+3
+normal! zo
+33
+normal! zo
+let s:l = 10 - ((9 * winheight(0) + 20) / 40)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+10
+normal! 028|
+lcd ~\Documents\notes
+wincmd w
+argglobal
+if bufexists("~\Documents\notes\using-vim.adoc") | buffer ~\Documents\notes\using-vim.adoc | else | edit ~\Documents\notes\using-vim.adoc | endif
+balt ~\Documents\notes\test.xml
+setlocal fdm=expr
+setlocal fde=AsciidoctorFold()
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+1
+normal! zo
+2
+normal! zo
+5
+normal! zo
+98
+normal! zo
+3538
+normal! zo
+let s:l = 8 - ((7 * winheight(0) + 33) / 67)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+8
+normal! 0
+lcd ~\Documents\notes
+wincmd w
+3wincmd w
+exe 'vert 1resize ' . ((&columns * 98 + 148) / 296)
+exe '2resize ' . ((&lines * 26 + 35) / 70)
+exe 'vert 2resize ' . ((&columns * 98 + 148) / 296)
+exe '3resize ' . ((&lines * 40 + 35) / 70)
+exe 'vert 3resize ' . ((&columns * 98 + 148) / 296)
+exe 'vert 4resize ' . ((&columns * 98 + 148) / 296)
+tabnext 1
+badd +20 ~\Documents\notes\test.xml
+badd +4643 ~\Documents\notes\using-vim.adoc
+badd +4 ~\Documents\notes\pw.adoc
+badd +0 ~\Documents\notes\tasks.adoc
+badd +0 ~\Documents\notes\bike-ride-prep-list.adoc
+badd +118 ~\Documents\websites\tek-write-jekyll\admin\pipeline\1-ideas\post-ideas.adoc
+badd +28 ~\vimfiles\gvimrc
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToOSI
+set winminheight=1 winminwidth=1
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :
