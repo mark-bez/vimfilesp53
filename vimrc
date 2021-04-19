@@ -78,7 +78,7 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight which character to jump to when using horizontal movement keys.
 Plug 'unblevable/quick-scope'
 
-" Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Show git file changes in the gutter.
@@ -282,8 +282,8 @@ augroup END
 " Opening window size
 " -----------------------------------------------------------------------------
 
-winpos 1020 50
-winsize 130 70
+winpos 1020 500
+winsize 140 50
 
 " -----------------------------------------------------------------------------
 " Startify settings
@@ -343,6 +343,7 @@ let g:startify_lists = [
 command! TidyHTML !tidy -mi -html -wrap 0 %
 command! TidyXML !tidy -mi -xml -wrap 0 %
 command! XMLlint %!xmllint % --format
+command! DITAvalid %!xmllint % --valid --noout
 
 " -----------------------------------------------------------------------------
 " Plugin settings, mappings and autocommands
@@ -480,8 +481,6 @@ let g:ale_fixers = {
 \   'xml': ['xmllint'],
 \}
 
-let g:ale_sign_error = 'x'
-let g:ale_sign_warning = '!'
 
 let g:ale_fix_on_save = 0       " Use 1 to activate - run :ALEFix instead if you want to manually fix a file
 let g:ale_linters_explicit = 1
@@ -497,12 +496,15 @@ let g:ale_linters = {
 
 let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files
 
-let g:ale_sign_error = '⚠️' "Less aggressive than the default '>>'
+let g:ale_sign_error = 'x'
+" let g:ale_sign_warning = '!'
+" let g:ale_sign_error = '⚠️' "Less aggressive than the default '>>'
+" let g:ale_sign_error = '▲'
 let g:ale_sign_warning = '💡'
 "let g:ale_echo_msg_warning_str = 'Warning 📣'
 "let g:ale_echo_msg_error_str = '❧ Error'
-highlight clear ALEErrorSign
-highlight clear ALEWarningSign
+" highlight clear ALEErrorSign
+" highlight clear ALEWarningSign
 
 " Bind F12 to fixing problems with ALE
 nmap <F12> <Plug>(ale_fix)

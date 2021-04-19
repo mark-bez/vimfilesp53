@@ -28,10 +28,5 @@ set guicursor=i:ver30-iCursor-blinkwait3000
 set guifont=Roboto_Mono:h14:W300
 " set guifont=Input_Mono:h14:W300
 set encoding=utf-8
-
-" I used the following line with my markai colorscheme - however if I want to
-" back to this I need to transfer it to my colorscheme instead of here
-" highlight CursorLine cterm=NONE ctermbg=yellow ctermfg=White guibg=gray10 guifg=White
-
 set linespace=2
 set sidescroll=1 " scrolls the window left/right to see text outside the window
