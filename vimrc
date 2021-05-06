@@ -30,6 +30,7 @@ set relativenumber             " set relative line numbers
 set ruler                      " show line and column number of the cursor on right side of statusline
 set scrolloff=3                " keep three lines between the cursor and the edge of the screen
 set shiftwidth=2               " number of spaces to use for each step of (auto)indent
+set shortmess=IS                " turns off Bram's message on start-up as well as add search number below the statusline
 set showcmd
 set noshowmatch                  "turn off highlight matching parentheses / brackets [{()}]
 set showmode
@@ -44,7 +45,8 @@ set textwidth=0
 set timeoutlen=500
 set updatetime=300             " default is 4 s which can cause delays
 set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
-set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
+" set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
+set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 set undodir=C:\Users\echo\vimfiles\undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
 set wildmenu                   " visual autocomplete for command menu
@@ -64,7 +66,7 @@ cd $HOME\Documents
 call plug#begin()
 
 " Startup screen
-Plug 'mhinz/vim-startify'
+" Plug 'mhinz/vim-startify'
 
 " Navigate and manipulate files in a tree view.
 Plug 'lambdalisue/fern.vim'
@@ -89,6 +91,9 @@ Plug 'habamax/vim-asciidoctor'
 
 " Automatically clear search highlights after you move your cursor.
 Plug 'haya14busa/incsearch.vim'
+
+" emmet
+Plug 'mattn/emmet-vim'
 
 " Integrate fzf with Vim.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -120,10 +125,13 @@ Plug 'justinmk/vim-sneak'
 Plug 'kadekillary/subtle_solo'
 
 " syntastic syntax checker for XML, HTML, asciidoc, Markdown and more
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
 
 " Git tool
 Plug 'tpope/vim-fugitive'
+
+" for use with xml
+Plug 'https://github.com/adelarsq/vim-matchit'
 
 call plug#end()
 
@@ -204,16 +212,15 @@ nnoremap <F3> :%s///gc<Left><Left><Left>
 nnoremap <tab> %
 vnoremap <tab> %
 
-set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 
 " enter insert mode after moving to the end of a word in Normal mode
 map e ea
 
 " Add an asciidoc bullet from normal mode
-nmap <leader>b a<CR>* 
+nmap <leader>b a<CR>*
 
 " Add an asciidoc checkbox from normal mode
-nmap <leader>bb a<CR>* [ ] 
+nmap <leader>bb a<CR>* [ ]
 
 " splits the line on a character in Normal mode when pressing s
 nnoremap <leader>s i<CR><ESC>
@@ -289,21 +296,21 @@ winsize 140 50
 " Startify settings
 " -----------------------------------------------------------------------------
 
-let g:startify_custom_header = [
-    \ ' WELCOME TO VIM'
-    \ ]
-
-let g:startify_session_dir = 'C:\Users\echo\vimfiles\sessions'
-
-let g:startify_bookmarks = [ 'C:\Users\echo\Documents\notes', 'C:\Users\echo\Documents\websites\tek-write-jekyll\site' ]
-
-let g:startify_lists = [
-      \ { 'type': 'bookmarks', 'header': ['   Bookmarks:']      },
-      \ { 'type': 'files',     'header': ['   Recent Files:']            },
-      \ { 'type': 'dir',       'header': ['   Files in Current Directory sorted by save time: '. getcwd()] },
-      \ { 'type': 'sessions',  'header': ['   Sessions:']       },
-      \ { 'type': 'commands',  'header': ['   Commands:']       },
-      \ ]
+" let g:startify_custom_header = [
+"     \ ' WELCOME TO VIM'
+"     \ ]
+"
+" let g:startify_session_dir = 'C:\Users\echo\vimfiles\sessions'
+"
+" let g:startify_bookmarks = [ 'C:\Users\echo\Documents\notes', 'C:\Users\echo\Documents\websites\tek-write-jekyll\site' ]
+"
+" let g:startify_lists = [
+"       \ { 'type': 'bookmarks', 'header': ['   Bookmarks:']      },
+"       \ { 'type': 'files',     'header': ['   Recent Files:']            },
+"       \ { 'type': 'dir',       'header': ['   Files in Current Directory sorted by save time: '. getcwd()] },
+"       \ { 'type': 'sessions',  'header': ['   Sessions:']       },
+"       \ { 'type': 'commands',  'header': ['   Commands:']       },
+"       \ ]
 
 " -----------------------------------------------------------------------------
 " Airline settings
@@ -341,7 +348,7 @@ let g:startify_lists = [
 
 " pretty print for use with HTML Tidy
 command! TidyHTML !tidy -mi -html -wrap 0 %
-command! TidyXML !tidy -mi -xml -wrap 0 %
+" command! TidyXML !tidy -mi -xml -wrap 0 %
 command! XMLlint %!xmllint % --format
 command! DITAvalid %!xmllint % --valid --noout
 
@@ -446,56 +453,57 @@ augroup asciidoctor
     au BufEnter *.adoc,*.asciidoc call AsciidoctorMappings()
 augroup END
 
-
 " .............................................................................
 " Syntastic plugin settings
 " .............................................................................
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_asciidoc_checkers = ['asciidoc']
-let g:syntastic_asciidoc_asciidoc_exec = "asciidoctor"
-let g:syntastic_xml_checkers = ['xmllint']
-let g:syntastic_html_checkers = ['tidy']
-let g:syntastic_css_checkers = ['stylelint']
-
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] } " starts up with Syntastic turned off. Use F9 to toggle it on and off. It interferes with fzf so must be off when using fzf.
-silent! nmap <F9> :SyntasticToggleMode<CR>
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_asciidoc_checkers = ['asciidoc']
+" let g:syntastic_asciidoc_asciidoc_exec = "asciidoctor"
+" let g:syntastic_xml_checkers = ['xmllint']
+" let g:syntastic_html_checkers = ['tidy']
+" let g:syntastic_css_checkers = ['stylelint']
+"
+" let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] } " starts up with Syntastic turned off. Use F9 to toggle it on and off. It interferes with fzf so must be off when using fzf.
+" silent! nmap <F9> :SyntasticToggleMode<CR>
 
 " .............................................................................
 " ALE plugin settings
 " .............................................................................
 
 let g:ale_html_tidy_executable = "C:\Program Files\tidy-5.6.0-vc14-64b\bin\tidy.exe"
+" Maybe need to turn off tidy here and in the html linters section below if it reports an error.
 
-" See https://medium.com/@jimeno0/eslint-and-prettier-in-vim-neovim-7e45f85cf8f9
 let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['eslint'],
+\   'html': ['tidy', 'prettier'],
 \   'css': ['stylelint', 'prettier'],
 \   'xml': ['xmllint'],
 \}
-
 
 let g:ale_fix_on_save = 0       " Use 1 to activate - run :ALEFix instead if you want to manually fix a file
 let g:ale_linters_explicit = 1
 let g:ale_lint_on_text_changed = 'never'   " Only activate on save
 let g:ale_lint_on_enter = 1    " start when GVim starts = 1. to turn it off use 0
+let g:ale_sign_column_always = 1 "keeps the sign column open at all times
 
 let g:ale_linters = {
  \   'css': ['stylelint', 'prettier'],
- \   'html': ['tidy'],
+ \   'html': ['tidy', 'prettier'],
  \   'javascript': ['eslint'],
  \   'xml': ['xmllint'],
  \}
 
 let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files
-
+let g:ale_set_highlights = 0  " 1 allows highlights for text symbols in the column, 0 disables
 let g:ale_sign_error = 'x'
 " let g:ale_sign_warning = '!'
 " let g:ale_sign_error = '⚠️' "Less aggressive than the default '>>'
@@ -505,6 +513,8 @@ let g:ale_sign_warning = '💡'
 "let g:ale_echo_msg_error_str = '❧ Error'
 " highlight clear ALEErrorSign
 " highlight clear ALEWarningSign
+let g:ale_open_list = 1  "  can be useful if combining ALE with another plugin
+let g:ale_keep_list_window_open = 1  
 
 " Bind F12 to fixing problems with ALE
 nmap <F12> <Plug>(ale_fix)
