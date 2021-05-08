@@ -46,7 +46,7 @@ set timeoutlen=500
 set updatetime=300             " default is 4 s which can cause delays
 set softtabstop=2              " backspace after pressing <TAB> will remove up to this many spaces
 " set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
-set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
+" set statusline=%t%=[%{strlen(&fenc)?&fenc:'none'},%{&ff}]\ %h%m%r%y\ %c\ %l/%L\ %P
 set undodir=C:\Users\echo\vimfiles\undodir     " Saves undo steps to a file so you can redo even after exiting Vim
 set undofile
 set wildmenu                   " visual autocomplete for command menu
@@ -132,6 +132,8 @@ Plug 'tpope/vim-fugitive'
 
 " for use with xml
 Plug 'https://github.com/adelarsq/vim-matchit'
+
+Plug 'osyo-manga/vim-anzu'
 
 call plug#end()
 
@@ -316,9 +318,13 @@ winsize 140 50
 " Airline settings
 " -----------------------------------------------------------------------------
 "
-" let g:airline_theme='solarized'
+let g:airline_theme='dark'
 " let g:airline_powerline_fonts = 1
-" let g:airline_detect_modified=1
+let g:airline_detect_modified=1
+
+" let g:airline_extensions_anzu_enabled = 1
+" statusline for vim-anzu - not sure if this does anything with airline
+" set statusline=%{anzu#search_status()}
 
 " -----------------------------------------------------------------------------
 " Insert date and time
@@ -493,7 +499,7 @@ let g:ale_fix_on_save = 0       " Use 1 to activate - run :ALEFix instead if you
 let g:ale_linters_explicit = 1
 let g:ale_lint_on_text_changed = 'never'   " Only activate on save
 let g:ale_lint_on_enter = 1    " start when GVim starts = 1. to turn it off use 0
-let g:ale_sign_column_always = 1 "keeps the sign column open at all times
+let g:ale_sign_column_always = 1 " 1 keeps the sign column open at all times
 
 let g:ale_linters = {
  \   'css': ['stylelint', 'prettier'],
@@ -502,7 +508,7 @@ let g:ale_linters = {
  \   'xml': ['xmllint'],
  \}
 
-let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files
+" let g:CSSLint_FileTypeList = ['css', 'less', 'sass'] " Activates csslint for use in Vim with css files - using stylelint
 let g:ale_set_highlights = 0  " 1 allows highlights for text symbols in the column, 0 disables
 let g:ale_sign_error = 'x'
 " let g:ale_sign_warning = '!'
@@ -514,7 +520,7 @@ let g:ale_sign_warning = '💡'
 " highlight clear ALEErrorSign
 " highlight clear ALEWarningSign
 let g:ale_open_list = 1  "  can be useful if combining ALE with another plugin
-let g:ale_keep_list_window_open = 1  
+let g:ale_keep_list_window_open = 1
 
 " Bind F12 to fixing problems with ALE
 nmap <F12> <Plug>(ale_fix)
@@ -629,3 +635,5 @@ map <C-x> "+x
 " nnoremap <leader>cd :cd %:p:h<CR>
 nnoremap <leader>cd :lcd %:h<CR>
 
+" F3 following a :g/pattern result puts the result into a new window
+nnoremap <silent> <F3> :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
