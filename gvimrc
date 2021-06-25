@@ -1,6 +1,3 @@
-colorscheme subtle_light
-set background=light
-
 " set guioptions-=T " Removes top toolbar
 set guioptions=rb " sets the right and bottom scrollbars and hides the menubar due to a missimg m
 set guitablabel=%N\ %t\ %M  " Sets the syntax of the tab label to a tab number and the filename of the current window.
@@ -30,3 +27,7 @@ set guifont=Roboto_Mono:h14:W300
 set encoding=utf-8
 set linespace=2
 set sidescroll=1 " scrolls the window left/right to see text outside the window
+
+" Ensures the initial GVim window opens full screen
+" set columns=300
+" set lines=100

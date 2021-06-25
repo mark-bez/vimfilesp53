@@ -1,5 +1,6 @@
 set autoindent                 " copy indent from current line when starting a new line
 set autoread                   "autoreload the file if is has been changed outside Vim
+set background=dark
 set backspace=indent,eol,start " Allows you to backspace to the left of the Insert mode entry character
 set backupdir=/tmp//,.
 set cmdheight=2                " give more space for displaying messages
@@ -14,6 +15,7 @@ set hlsearch                   " highlight search matches
 set incsearch                  " search as characters are entered, which is incremental search
 set laststatus=2               " always show statusline (even with only single window)
 set lazyredraw                 " redraw screen only when we need to
+set linespace=2
 set listchars=tab:Δ\ ,eol:¬
 set matchpairs+=<:>            " Use % to jump between pairs
 set number                     " show line numbers
@@ -30,8 +32,9 @@ set relativenumber             " set relative line numbers
 set ruler                      " show line and column number of the cursor on right side of statusline
 set scrolloff=3                " keep three lines between the cursor and the edge of the screen
 set shiftwidth=2               " number of spaces to use for each step of (auto)indent
-set shortmess=IS                " turns off Bram's message on start-up as well as add search number below the statusline
+set shortmess=IS               " turns off Bram's message on start-up as well as add search number below the statusline
 set showcmd
+set sidescroll=1               " scrolls the window left/right to see text outside the window
 set noshowmatch                  "turn off highlight matching parentheses / brackets [{()}]
 set showmode
 set smartcase
@@ -124,18 +127,27 @@ Plug 'justinmk/vim-sneak'
 " subtle-colo colorscheme
 Plug 'kadekillary/subtle_solo'
 
-" syntastic syntax checker for XML, HTML, asciidoc, Markdown and more
-" Plug 'vim-syntastic/syntastic'
-
 " Git tool
 Plug 'tpope/vim-fugitive'
 
 " for use with xml
 Plug 'https://github.com/adelarsq/vim-matchit'
 
-Plug 'osyo-manga/vim-anzu'
+Plug 'ayu-theme/ayu-vim' " or other package manager
+set termguicolors     " enable true colors support
+" let ayucolor="light"  " for light version of theme
+" let ayucolor="mirage" " for mirage version of theme
+let ayucolor="dark"   " for dark version of theme
 
 call plug#end()
+
+" -----------------------------------------------------------------------------
+" Colorscheme 
+" -----------------------------------------------------------------------------
+
+" colorscheme subtle_light
+" colorscheme desert
+colorscheme ayu
 
 " -----------------------------------------------------------------------------
 " Cursor line - see gvimrc for other cursor line settings
@@ -143,6 +155,13 @@ call plug#end()
 
 " shows/hides cursor line when switching modes
 :autocmd InsertEnter,InsertLeave * set cul!
+
+" .............................................................................
+" xml.vim ftplugin mappings - must come before the filetype plugin command
+" .............................................................................
+
+" Enables tag closing for hr, br etc in HTML 
+let xml_use_xhtml = 1
 
 " -----------------------------------------------------------------------------
 " Syntax highlighting and indenting
@@ -291,8 +310,10 @@ augroup END
 " Opening window size
 " -----------------------------------------------------------------------------
 
-winpos 1020 500
-winsize 140 50
+" winpos 1020 500
+" winsize 140 50
+ winpos 0 0
+ winsize 300 120
 
 " -----------------------------------------------------------------------------
 " Startify settings
@@ -498,12 +519,12 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 0       " Use 1 to activate - run :ALEFix instead if you want to manually fix a file
 let g:ale_linters_explicit = 1
 let g:ale_lint_on_text_changed = 'never'   " Only activate on save
-let g:ale_lint_on_enter = 1    " start when GVim starts = 1. to turn it off use 0
+let g:ale_lint_on_enter = 0    " start when GVim starts = 1. to turn it off use 0
 let g:ale_sign_column_always = 1 " 1 keeps the sign column open at all times
 
 let g:ale_linters = {
  \   'css': ['stylelint', 'prettier'],
- \   'html': ['tidy', 'prettier'],
+ \   'html': ['prettier'],
  \   'javascript': ['eslint'],
  \   'xml': ['xmllint'],
  \}
@@ -626,6 +647,16 @@ map <C-p> "+p
 " use ctrl-x in normal and visual modes of Vim to cut and store in the Windows clipboard
 map <C-x> "+x
 
+" exchange word under cursor with the next word without moving the cursor
+" nnoremap gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>
+nnoremap gw dawwP
+
+" push word under cursor to the left
+nnoremap <leader><Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>
+
+" push word under cursor to the right
+nnoremap <leader><Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>
+
 " -----------------------------------------------------------------------------
 " Set current directory on the fly
 " -----------------------------------------------------------------------------
@@ -637,3 +668,7 @@ nnoremap <leader>cd :lcd %:h<CR>
 
 " F3 following a :g/pattern result puts the result into a new window
 nnoremap <silent> <F3> :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
+
+noremap <leader>dt a<?xml version="1.0" encoding="utf-8"?><CR><!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd"><CR><task id="abcd"><CR><taskbody><CR><title>Title</title><CR></taskbody><CR></task><ESC>
+noremap <leader>dc a<?xml version="1.0" encoding="utf-8"?><CR><!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd"><CR><concept id="abcd"><CR><conbody><CR><title>Title</title><CR></conbody><CR></concept><ESC>
+noremap <leader>ht a<!DOCTYPE html><CR><html><CR><head><CR><title>Title</title><CR><link rel="stylesheet" href="style.css"><CR></head><CR><body><CR><h1>Heading1</h1><CR></body><CR></html><ESC>
